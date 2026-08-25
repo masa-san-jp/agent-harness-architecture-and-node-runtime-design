@@ -583,4 +583,4 @@ flowchart LR
 
 実装に必要なオブジェクト、状態遷移、ハーネス定義、ログスキーマ、レビュー、ロードマップは、次のアーキテクチャ設計書で定義する。
 
-- [`20260824-business-node-driven-agent-harness-architecture-design.md`](./20260824-business-node-driven-agent-harness-architecture-design.md)
+- [`20260824-business-node-driven-agent-harness-architecture-design.md`](./docs/architecture/20260824-business-node-driven-agent-harness-architecture-design.md)
