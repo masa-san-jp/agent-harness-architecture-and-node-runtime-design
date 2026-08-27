@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:review-contract:v1",
+  "title": "Review workflow bundle",
+  "description": "Questions, decisions, change sets, and time-bounded approvals.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["review_id", "target_refs", "questions", "decisions", "change_sets", "approvals"],
+  "properties": {
+    "review_id": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "target_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "urn:agent-harness-reference:identifier:v1" }
+    },
+    "questions": {
+      "type": "array",
+      "items": { "$ref": "urn:agent-harness-reference:review-question:v1" }
+    },
+    "decisions": {
+      "type": "array",
+      "items": { "$ref": "urn:agent-harness-reference:review-decision:v1" }
+    },
+    "change_sets": {
+      "type": "array",
+      "items": { "$ref": "urn:agent-harness-reference:change-set:v1" }
+    },
+    "approvals": { "type": "array", "items": { "$ref": "urn:agent-harness-reference:approval:v1" } }
+  }
+}

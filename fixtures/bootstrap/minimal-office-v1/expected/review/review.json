@@ -1,0 +1,19 @@
+{
+  "contract_id": "review-contract",
+  "version": "1.0.0",
+  "question_sources": [
+    "unverified",
+    "contradictory",
+    "high_risk",
+    "missing_completion",
+    "missing_failure"
+  ],
+  "answer_types": ["fact", "opinion", "approval", "exception"],
+  "required_target_links": ["draft", "node", "evidence"],
+  "change_set_is_versioned": true,
+  "approved_version_is_immutable": true,
+  "self_approval": "deny",
+  "high_risk_role": "independent_reviewer",
+  "exception_requires_expiry": true,
+  "expired_approval_action": "re_review"
+}
