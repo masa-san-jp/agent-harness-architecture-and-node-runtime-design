@@ -227,6 +227,7 @@ function deterministicEdges(
   );
   return orderedEvents.slice(1).flatMap((event, index) => {
     const previousEvent = orderedEvents[index];
+    if (!previousEvent) return [];
     const from = nodes.find(
       (node) =>
         node.node_id ===
