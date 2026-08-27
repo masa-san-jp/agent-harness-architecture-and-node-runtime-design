@@ -1,0 +1,27 @@
+{
+  "name": "agent-harness-architecture-and-node-runtime-design",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reference architecture and runtime contracts for evidence-to-harness bootstrapping.",
+  "type": "module",
+  "packageManager": "pnpm@10.34.5",
+  "engines": {
+    "node": "24.20.0",
+    "pnpm": "10.34.5"
+  },
+  "scripts": {
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "typecheck": "node scripts/run-workspaces.mjs typecheck",
+    "test": "node scripts/run-workspaces.mjs test",
+    "conformance": "node scripts/run-workspaces.mjs conformance",
+    "verify": "prettier --check . && eslint . && node scripts/run-workspaces.mjs typecheck && node scripts/run-workspaces.mjs test && node scripts/run-workspaces.mjs conformance"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.0",
+    "eslint": "9.29.0",
+    "prettier": "3.6.2",
+    "typescript": "5.9.3",
+    "vitest": "3.2.4"
+  }
+}
