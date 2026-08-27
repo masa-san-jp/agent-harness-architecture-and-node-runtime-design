@@ -1,0 +1,45 @@
+{
+  "fixture_id": "minimal-office",
+  "version": "1.0.0",
+  "description": "Synthetic records for evidence-to-harness bootstrap conformance.",
+  "classification": {
+    "level": "synthetic",
+    "tags": ["no-personal-data", "no-secrets"]
+  },
+  "network_access": false,
+  "time_window": {
+    "start": "2026-01-05T00:00:00Z",
+    "end": "2026-01-07T23:59:59Z"
+  },
+  "sources": [
+    {
+      "source_id": "source-requests-csv",
+      "path": "raw/requests.csv",
+      "format": "text/csv",
+      "sha256": "24d280834118969a7099c66b57813367a8d2dd6e5bf79aa456a3e5f0cf875dc6"
+    },
+    {
+      "source_id": "source-handoffs-jsonl",
+      "path": "raw/handoffs.jsonl",
+      "format": "application/jsonl",
+      "sha256": "b331f399fa1e48910e5732af89038c6e81f27f118d4a31d44a36efdcb4815eb6"
+    },
+    {
+      "source_id": "source-procedure-markdown",
+      "path": "raw/procedure.md",
+      "format": "text/markdown",
+      "sha256": "90dd6210a4342696632e8a104405934b6c281731a88e9f44dfbebdc5cd2326fa"
+    }
+  ],
+  "expected_stages": [
+    "lifecycle",
+    "evidence",
+    "importer",
+    "graph",
+    "harness-draft",
+    "review",
+    "security",
+    "runtime",
+    "e2e"
+  ]
+}

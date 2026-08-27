@@ -1,0 +1,4 @@
+request_id,requested_at,requester,subject,status,approved_at
+REQ-001,2026-01-05T09:00:00Z,person-a,monthly report,completed,2026-01-05T11:30:00Z
+REQ-002,2026-01-06T10:15:00Z,person-b,access review,completed,2026-01-06T15:00:00Z
+REQ-003,2026-01-07T13:20:00Z,person-a,monthly report,pending,
