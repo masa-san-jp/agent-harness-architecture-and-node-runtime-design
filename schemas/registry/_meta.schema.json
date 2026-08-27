@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:contract-manifest:v1",
+  "title": "Contract manifest",
+  "description": "Metadata that registers one versioned public contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id",
+    "version",
+    "status",
+    "owner_issue",
+    "schema_path",
+    "normative_spec",
+    "conformance_suite",
+    "compatibility"
+  ],
+  "properties": {
+    "contract_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,63}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "proposed", "accepted", "deprecated"]
+    },
+    "owner_issue": {
+      "type": "string",
+      "pattern": "^#[1-9][0-9]*$"
+    },
+    "schema_path": {
+      "type": "string",
+      "pattern": "^schemas/.+(\\.json|/)$"
+    },
+    "normative_spec": {
+      "type": "string",
+      "pattern": "^docs/.+\\.md$"
+    },
+    "conformance_suite": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,63}$"
+    },
+    "compatibility": {
+      "type": "string",
+      "enum": ["initial", "patch", "minor", "major"]
+    },
+    "replaces": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,63}:[0-9]+\\.[0-9]+\\.[0-9]+$"
+    }
+  }
+}

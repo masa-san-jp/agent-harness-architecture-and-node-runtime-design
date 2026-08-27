@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:provenance:v1",
+  "title": "Provenance record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind"],
+  "properties": {
+    "kind": {
+      "type": "string",
+      "enum": ["source", "normalized", "inferred", "human_confirmed", "system_generated"]
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "urn:agent-harness-reference:identifier:v1"
+      },
+      "uniqueItems": true
+    },
+    "actor_ref": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "method_ref": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
