@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:evidence-importer-port:v1",
+  "title": "Evidence importer port",
+  "description": "Serializable read-only import catalog and adapter outcomes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "catalog_id",
+    "captured_at",
+    "parser_version",
+    "read_only",
+    "dry_run",
+    "artifacts",
+    "sources",
+    "records",
+    "outcomes",
+    "diagnostics"
+  ],
+  "properties": {
+    "catalog_id": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "captured_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "parser_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "read_only": {
+      "const": true
+    },
+    "dry_run": {
+      "type": "boolean"
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "$ref": "urn:agent-harness-reference:artifact-ref:v1"
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "urn:agent-harness-reference:evidence-source:v1"
+      }
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "$ref": "urn:agent-harness-reference:evidence-record:v1"
+      }
+    },
+    "outcomes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_ref", "adapter_id", "parser_version", "status", "diagnostic_refs"],
+        "properties": {
+          "source_ref": {
+            "$ref": "urn:agent-harness-reference:identifier:v1"
+          },
+          "adapter_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "parser_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": ["parsed", "partial", "unsupported", "failed", "duplicate"]
+          },
+          "diagnostic_refs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "urn:agent-harness-reference:identifier:v1"
+            }
+          }
+        }
+      }
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["diagnostic_id", "code", "severity", "path", "message"],
+        "properties": {
+          "diagnostic_id": {
+            "$ref": "urn:agent-harness-reference:identifier:v1"
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["info", "warning", "error"]
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "line": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        }
+      }
+    }
+  }
+}
