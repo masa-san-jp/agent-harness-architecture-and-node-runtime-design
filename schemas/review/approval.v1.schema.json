@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:approval:v1",
+  "title": "Time-bounded review approval",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "approval_id",
+    "target_ref",
+    "requester_ref",
+    "approver_ref",
+    "approver_role",
+    "risk_class",
+    "decision",
+    "decided_at",
+    "expires_at",
+    "evidence_refs",
+    "reason_codes"
+  ],
+  "properties": {
+    "approval_id": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "target_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "requester_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "approver_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "approver_role": { "type": "string", "minLength": 1 },
+    "risk_class": { "enum": ["C1", "C2", "C3", "low", "medium", "high", "critical"] },
+    "decision": { "enum": ["approve", "reject", "revoke"] },
+    "decided_at": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "evidence_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "urn:agent-harness-reference:identifier:v1" }
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$" }
+    }
+  }
+}

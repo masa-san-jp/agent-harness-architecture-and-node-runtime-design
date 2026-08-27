@@ -1,0 +1,10 @@
+{
+  "contract_id": "review-contract",
+  "version": "1.0.0",
+  "status": "accepted",
+  "owner_issue": "#7",
+  "schema_path": "schemas/review/review-contract.v1.schema.json",
+  "normative_spec": "docs/architecture/review-contract.md",
+  "conformance_suite": "review-workflow",
+  "compatibility": "initial"
+}

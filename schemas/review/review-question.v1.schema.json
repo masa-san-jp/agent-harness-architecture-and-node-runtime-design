@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:review-question:v1",
+  "title": "Review question",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "question_id",
+    "target_refs",
+    "evidence_refs",
+    "path",
+    "question",
+    "reason",
+    "priority",
+    "status",
+    "created_at"
+  ],
+  "properties": {
+    "question_id": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "target_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "urn:agent-harness-reference:identifier:v1" }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "urn:agent-harness-reference:identifier:v1" }
+    },
+    "path": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "reason": { "type": "string", "minLength": 1 },
+    "priority": { "enum": ["low", "medium", "high", "critical"] },
+    "status": { "enum": ["open", "answered", "suppressed"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "suppression_reason": { "type": "string" }
+  }
+}
