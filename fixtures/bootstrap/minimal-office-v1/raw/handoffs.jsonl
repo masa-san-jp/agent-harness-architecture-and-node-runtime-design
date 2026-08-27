@@ -1,0 +1,5 @@
+{"event_id":"EVT-001","occurred_at":"2026-01-05T09:00:00Z","actor":"person-a","action":"request_created","input_ref":"REQ-001","output_ref":"request:REQ-001"}
+{"event_id":"EVT-002","occurred_at":"2026-01-05T10:00:00Z","actor":"person-c","action":"report_prepared","input_ref":"request:REQ-001","output_ref":"artifact:report-001"}
+{"event_id":"EVT-003","occurred_at":"2026-01-05T11:30:00Z","actor":"person-d","action":"request_approved","input_ref":"artifact:report-001","output_ref":"approval:REQ-001"}
+{"event_id":"EVT-004","occurred_at":"2026-01-06T10:15:00Z","actor":"person-b","action":"request_created","input_ref":"REQ-002","output_ref":"request:REQ-002"}
+{"event_id":"EVT-005","occurred_at":"2026-01-06T15:00:00Z","actor":"person-d","action":"request_approved","input_ref":"request:REQ-002","output_ref":"approval:REQ-002"}
