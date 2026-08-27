@@ -1,0 +1,19 @@
+{
+  "contract_id": "bootstrap-e2e",
+  "version": "1.0.0",
+  "input": "raw/",
+  "expected_path": [
+    "catalog",
+    "candidate_graph",
+    "harness_draft",
+    "review_questions",
+    "replay",
+    "teardown"
+  ],
+  "source_count": 3,
+  "record_count": 9,
+  "draft_executable": false,
+  "replay_status": "completed",
+  "teardown": { "credentials_revoked": true, "workspace_deleted": true },
+  "network_access": false
+}

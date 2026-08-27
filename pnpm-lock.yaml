@@ -23,6 +23,31 @@ importers:
         specifier: 3.2.4
         version: 3.2.4(@types/node@24.10.0)
 
+  apps/reference-cli:
+    dependencies:
+      "@agent-harness/ephemeral-runtime":
+        specifier: workspace:*
+        version: link:../../packages/ephemeral-runtime
+      "@agent-harness/evidence-importer":
+        specifier: workspace:*
+        version: link:../../packages/evidence-importer
+      "@agent-harness/graph-inference":
+        specifier: workspace:*
+        version: link:../../packages/graph-inference
+      "@agent-harness/harness-draft":
+        specifier: workspace:*
+        version: link:../../packages/harness-draft
+      "@agent-harness/policy-evaluator":
+        specifier: workspace:*
+        version: link:../../packages/policy-evaluator
+      "@agent-harness/review-workflow":
+        specifier: workspace:*
+        version: link:../../packages/review-workflow
+    devDependencies:
+      vitest:
+        specifier: 3.2.4
+        version: 3.2.4(@types/node@24.10.0)
+
   packages/conformance:
     devDependencies:
       "@types/node":

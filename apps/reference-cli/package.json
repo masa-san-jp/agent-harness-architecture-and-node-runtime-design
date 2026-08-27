@@ -1,0 +1,23 @@
+{
+  "name": "@agent-harness/reference-cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build-dependencies": "node scripts/build-dependencies.mjs",
+    "pretest": "pnpm run build-dependencies",
+    "test": "vitest run --passWithNoTests",
+    "cli": "node src/cli.mjs"
+  },
+  "dependencies": {
+    "@agent-harness/evidence-importer": "workspace:*",
+    "@agent-harness/graph-inference": "workspace:*",
+    "@agent-harness/harness-draft": "workspace:*",
+    "@agent-harness/policy-evaluator": "workspace:*",
+    "@agent-harness/review-workflow": "workspace:*",
+    "@agent-harness/ephemeral-runtime": "workspace:*"
+  },
+  "devDependencies": {
+    "vitest": "3.2.4"
+  }
+}
