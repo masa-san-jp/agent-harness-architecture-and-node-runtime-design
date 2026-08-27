@@ -1,0 +1,75 @@
+{
+  "cases": [
+    {
+      "case_id": "metadata_same_tenant",
+      "action": "evidence.read_metadata",
+      "classification": "synthetic",
+      "subject_tenant": "tenant:one",
+      "resource_tenant": "tenant:one",
+      "integrity_verified": true,
+      "human_approved": false,
+      "masking_state": "unmasked",
+      "prompt_injection_detected": false,
+      "expected_effect": "allow",
+      "expected_reason": "RULE_ALLOW"
+    },
+    {
+      "case_id": "original_without_review",
+      "action": "evidence.read_original",
+      "classification": "synthetic",
+      "subject_tenant": "tenant:one",
+      "resource_tenant": "tenant:one",
+      "integrity_verified": true,
+      "human_approved": false,
+      "masking_state": "unmasked",
+      "prompt_injection_detected": false,
+      "expected_effect": "deny",
+      "expected_reason": "DEFAULT_DENY"
+    },
+    {
+      "case_id": "cross_tenant_metadata",
+      "action": "evidence.read_metadata",
+      "classification": "synthetic",
+      "subject_tenant": "tenant:one",
+      "resource_tenant": "tenant:two",
+      "integrity_verified": true,
+      "human_approved": true,
+      "masking_state": "unmasked",
+      "prompt_injection_detected": false,
+      "expected_effect": "deny",
+      "expected_reason": "CROSS_TENANT_REFERENCE"
+    },
+    {
+      "case_id": "prompt_injection_tool",
+      "action": "tool.execute",
+      "classification": "synthetic",
+      "subject_tenant": "tenant:one",
+      "resource_tenant": "tenant:one",
+      "integrity_verified": true,
+      "human_approved": true,
+      "masking_state": "unmasked",
+      "prompt_injection_detected": true,
+      "expected_effect": "deny",
+      "expected_reason": "PROMPT_INJECTION_UNTRUSTED"
+    },
+    {
+      "case_id": "external_confidential",
+      "action": "model.external_send",
+      "classification": "confidential",
+      "subject_tenant": "tenant:one",
+      "resource_tenant": "tenant:one",
+      "integrity_verified": true,
+      "human_approved": true,
+      "masking_state": "masked",
+      "prompt_injection_detected": false,
+      "expected_effect": "deny",
+      "expected_reason": "CLASSIFICATION_NOT_ALLOWED"
+    }
+  ],
+  "data_handling": {
+    "classification": "synthetic",
+    "original_access": "deny_without_approval",
+    "external_destination": "allow_when_masked",
+    "derived_retention_days": 90
+  }
+}

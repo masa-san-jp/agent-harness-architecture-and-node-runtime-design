@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:bootstrap-policy:v1",
+  "title": "Bootstrap policy",
+  "description": "Deny-by-default policy configuration for evidence and bootstrap actions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "policy_id",
+    "version",
+    "default_effect",
+    "actions",
+    "rules",
+    "classification_order",
+    "external_model_classifications",
+    "require_masking_for_external",
+    "retention"
+  ],
+  "properties": {
+    "policy_id": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "default_effect": {
+      "const": "deny"
+    },
+    "actions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "evidence.read_metadata",
+          "evidence.read_original",
+          "storage.write_derived",
+          "model.infer",
+          "model.external_send",
+          "tool.execute",
+          "runtime.execute",
+          "audit.append"
+        ]
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rule_id", "action", "effect", "conditions"],
+        "properties": {
+          "rule_id": {
+            "$ref": "urn:agent-harness-reference:identifier:v1"
+          },
+          "action": {
+            "type": "string"
+          },
+          "effect": {
+            "enum": ["allow", "deny"]
+          },
+          "conditions": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "classifications": {
+                "type": "array",
+                "items": { "type": "string" },
+                "uniqueItems": true
+              },
+              "network": {
+                "enum": ["none", "internal", "external"]
+              },
+              "tenant_scope": {
+                "enum": ["same_tenant", "any", "none"]
+              },
+              "require_integrity": {
+                "type": "boolean"
+              },
+              "require_human_approval": {
+                "type": "boolean"
+              },
+              "require_masking": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "classification_order": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "external_model_classifications": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string" }
+    },
+    "require_masking_for_external": {
+      "type": "boolean"
+    },
+    "retention": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["classification", "original_days", "derived_days"],
+        "properties": {
+          "classification": { "type": "string", "minLength": 1 },
+          "original_days": { "type": "integer", "minimum": 0 },
+          "derived_days": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "patternProperties": {
+        "^(domain|local)\\.[a-z][a-z0-9_.-]*$": {}
+      },
+      "additionalProperties": false
+    }
+  }
+}

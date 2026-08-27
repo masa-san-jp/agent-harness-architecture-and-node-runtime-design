@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:policy-decision:v1",
+  "title": "Policy decision",
+  "description": "Deterministic allow or deny result for one policy action.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decision_id",
+    "request_id",
+    "policy_ref",
+    "action",
+    "effect",
+    "reason_codes",
+    "evaluated_at",
+    "subject_ref",
+    "resource_refs",
+    "audit_required"
+  ],
+  "properties": {
+    "decision_id": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "request_id": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "policy_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "action": { "type": "string" },
+    "effect": { "enum": ["allow", "deny"] },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$" }
+    },
+    "evaluated_at": { "type": "string", "format": "date-time" },
+    "subject_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "resource_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "urn:agent-harness-reference:identifier:v1" }
+    },
+    "matched_rule_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "urn:agent-harness-reference:identifier:v1" }
+    },
+    "audit_required": { "const": true },
+    "extensions": {
+      "type": "object",
+      "patternProperties": { "^(domain|local)\\.[a-z][a-z0-9_.-]*$": {} },
+      "additionalProperties": false
+    }
+  }
+}

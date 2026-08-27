@@ -1,0 +1,71 @@
+{
+  "contract_id": "bootstrap-policy",
+  "version": "1.0.0",
+  "policy_id": "policy:minimal-office",
+  "default_effect": "deny",
+  "actions": [
+    "evidence.read_metadata",
+    "evidence.read_original",
+    "storage.write_derived",
+    "model.infer",
+    "model.external_send",
+    "tool.execute",
+    "runtime.execute",
+    "audit.append"
+  ],
+  "rules": [
+    {
+      "rule_id": "rule:metadata-same-tenant",
+      "action": "evidence.read_metadata",
+      "effect": "allow",
+      "conditions": { "tenant_scope": "same_tenant", "require_integrity": true }
+    },
+    {
+      "rule_id": "rule:original-reviewed",
+      "action": "evidence.read_original",
+      "effect": "allow",
+      "conditions": { "tenant_scope": "same_tenant", "require_human_approval": true }
+    },
+    {
+      "rule_id": "rule:inference-controlled",
+      "action": "model.infer",
+      "effect": "allow",
+      "conditions": {
+        "classifications": ["synthetic", "internal"],
+        "network": "none",
+        "tenant_scope": "same_tenant",
+        "require_integrity": true
+      }
+    },
+    {
+      "rule_id": "rule:external-synthetic-only",
+      "action": "model.external_send",
+      "effect": "allow",
+      "conditions": {
+        "classifications": ["synthetic"],
+        "network": "external",
+        "tenant_scope": "same_tenant",
+        "require_integrity": true,
+        "require_masking": true
+      }
+    },
+    {
+      "rule_id": "rule:tool-reviewed",
+      "action": "tool.execute",
+      "effect": "allow",
+      "conditions": {
+        "tenant_scope": "same_tenant",
+        "require_integrity": true,
+        "require_human_approval": true
+      }
+    }
+  ],
+  "classification_order": ["synthetic", "internal", "confidential", "restricted"],
+  "external_model_classifications": ["synthetic"],
+  "require_masking_for_external": true,
+  "retention": [
+    { "classification": "synthetic", "original_days": 30, "derived_days": 90 },
+    { "classification": "internal", "original_days": 30, "derived_days": 60 },
+    { "classification": "confidential", "original_days": 7, "derived_days": 30 }
+  ]
+}
