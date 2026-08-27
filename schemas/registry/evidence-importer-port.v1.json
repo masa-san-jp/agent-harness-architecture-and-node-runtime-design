@@ -1,0 +1,10 @@
+{
+  "contract_id": "evidence-importer-port",
+  "version": "1.0.0",
+  "status": "accepted",
+  "owner_issue": "#4",
+  "schema_path": "schemas/adapter/evidence-importer-port.v1.schema.json",
+  "normative_spec": "docs/architecture/evidence-importer-port.md",
+  "conformance_suite": "evidence-importer",
+  "compatibility": "initial"
+}
