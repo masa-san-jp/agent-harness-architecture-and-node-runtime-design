@@ -1,0 +1,10 @@
+{
+  "contract_id": "candidate-graph",
+  "version": "1.0.0",
+  "status": "accepted",
+  "owner_issue": "#5",
+  "schema_path": "schemas/graph/candidate-graph.v1.schema.json",
+  "normative_spec": "docs/architecture/graph-inference-contract.md",
+  "conformance_suite": "graph-inference",
+  "compatibility": "initial"
+}

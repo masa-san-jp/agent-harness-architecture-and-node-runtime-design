@@ -1,0 +1,19 @@
+{
+  "contract_id": "candidate-graph",
+  "version": "1.0.0",
+  "input_stage": "expected/evidence/normalized.json",
+  "required_node_fields": [
+    "purpose",
+    "input",
+    "process",
+    "output",
+    "completion_condition",
+    "executor"
+  ],
+  "minimum_deterministic_nodes": 2,
+  "minimum_deterministic_edges": 1,
+  "required_statuses": ["insufficient", "ambiguous", "contradictory", "unverified"],
+  "model_provenance_kind": "inferred",
+  "model_is_optional": true,
+  "run_must_record": ["input_digest", "configuration_ref", "executed_at", "reproducible"]
+}
