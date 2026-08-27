@@ -1,0 +1,30 @@
+{
+  "contract_id": "bootstrap-lifecycle",
+  "version": "1.0.0",
+  "states": [
+    "no_harness",
+    "evidence_ready",
+    "candidate_model",
+    "draft_review",
+    "observe",
+    "replay",
+    "shadow",
+    "assist",
+    "execute"
+  ],
+  "allowed_transitions": [
+    ["no_harness", "evidence_ready"],
+    ["evidence_ready", "candidate_model"],
+    ["candidate_model", "draft_review"],
+    ["draft_review", "observe"],
+    ["observe", "replay"],
+    ["observe", "draft_review"],
+    ["replay", "shadow"],
+    ["replay", "draft_review"],
+    ["shadow", "assist"],
+    ["shadow", "draft_review"],
+    ["assist", "execute"],
+    ["assist", "draft_review"],
+    ["execute", "draft_review"]
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "contract_id": "promotion-decision",
+  "version": "1.0.0",
+  "status": "accepted",
+  "owner_issue": "#2",
+  "schema_path": "schemas/bootstrap/promotion-decision.v1.schema.json",
+  "normative_spec": "docs/architecture/bootstrap-lifecycle.md",
+  "conformance_suite": "bootstrap-lifecycle",
+  "compatibility": "initial"
+}

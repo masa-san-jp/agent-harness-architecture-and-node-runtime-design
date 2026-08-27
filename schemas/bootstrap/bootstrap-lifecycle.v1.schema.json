@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:bootstrap-lifecycle:v1",
+  "title": "Bootstrap lifecycle record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["lifecycle_id", "state", "scope_ref", "created_at", "updated_at"],
+  "properties": {
+    "lifecycle_id": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "state": {
+      "$ref": "urn:agent-harness-reference:lifecycle-state:v1"
+    },
+    "scope_ref": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "urn:agent-harness-reference:identifier:v1"
+      },
+      "uniqueItems": true
+    },
+    "node_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "urn:agent-harness-reference:identifier:v1"
+      },
+      "uniqueItems": true
+    },
+    "harness_draft_ref": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "last_promotion_ref": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

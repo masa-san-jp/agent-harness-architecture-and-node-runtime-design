@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:promotion-decision:v1",
+  "title": "Bootstrap promotion decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decision_id",
+    "lifecycle_id",
+    "from_state",
+    "to_state",
+    "decision",
+    "requested_by",
+    "decided_at",
+    "reason",
+    "evidence_refs",
+    "policy_version"
+  ],
+  "properties": {
+    "decision_id": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "lifecycle_id": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "from_state": {
+      "$ref": "urn:agent-harness-reference:lifecycle-state:v1"
+    },
+    "to_state": {
+      "$ref": "urn:agent-harness-reference:lifecycle-state:v1"
+    },
+    "decision": {
+      "type": "string",
+      "enum": ["approve", "reject", "return", "revoke"]
+    },
+    "requested_by": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "approved_by": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "decided_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "urn:agent-harness-reference:identifier:v1"
+      },
+      "uniqueItems": true
+    },
+    "required_checks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "completed_checks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "policy_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

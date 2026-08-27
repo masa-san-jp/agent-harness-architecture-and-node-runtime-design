@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:lifecycle-state:v1",
+  "title": "Bootstrap lifecycle state",
+  "type": "string",
+  "enum": [
+    "no_harness",
+    "evidence_ready",
+    "candidate_model",
+    "draft_review",
+    "observe",
+    "replay",
+    "shadow",
+    "assist",
+    "execute"
+  ]
+}
