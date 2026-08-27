@@ -1,0 +1,28 @@
+{
+  "examples": [
+    {
+      "source_kind": "csv",
+      "media_type": "text/csv",
+      "record_locator": "row:42;request_id=REQ-042",
+      "normalized_claim": "column values retain the row locator and source provenance"
+    },
+    {
+      "source_kind": "email",
+      "media_type": "message/rfc822",
+      "record_locator": "message-id:<example@example.invalid>",
+      "normalized_claim": "sender, recipients, subject, and attachment references are claims"
+    },
+    {
+      "source_kind": "file_update",
+      "media_type": "application/json",
+      "record_locator": "object:reports/monthly.xlsx@version:17",
+      "normalized_claim": "create, modify, rename, and delete are observed actions"
+    },
+    {
+      "source_kind": "api_audit",
+      "media_type": "application/json",
+      "record_locator": "audit_id:AUD-042",
+      "normalized_claim": "actor, operation, target, result, and request references are claims"
+    }
+  ]
+}

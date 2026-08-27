@@ -1,0 +1,196 @@
+{
+  "contract_ids": ["artifact-ref", "evidence-record", "evidence-source", "observed-event"],
+  "artifacts": [
+    {
+      "artifact_id": "artifact:source-requests-csv",
+      "locator": "fixture://minimal-office/raw/requests.csv",
+      "media_type": "text/csv",
+      "sha256": "24d280834118969a7099c66b57813367a8d2dd6e5bf79aa456a3e5f0cf875dc6",
+      "availability": "stored",
+      "masking": { "state": "unmasked" },
+      "classification": { "level": "synthetic", "tags": ["no-personal-data"] }
+    },
+    {
+      "artifact_id": "artifact:source-handoffs-jsonl",
+      "locator": "fixture://minimal-office/raw/handoffs.jsonl",
+      "media_type": "application/jsonl",
+      "sha256": "b331f399fa1e48910e5732af89038c6e81f27f118d4a31d44a36efdcb4815eb6",
+      "availability": "stored",
+      "masking": { "state": "unmasked" },
+      "classification": { "level": "synthetic", "tags": ["no-personal-data"] }
+    },
+    {
+      "artifact_id": "artifact:source-procedure-markdown",
+      "locator": "fixture://minimal-office/raw/procedure.md",
+      "media_type": "text/markdown",
+      "sha256": "90dd6210a4342696632e8a104405934b6c281731a88e9f44dfbebdc5cd2326fa",
+      "availability": "stored",
+      "masking": { "state": "unmasked" },
+      "classification": { "level": "synthetic", "tags": ["no-personal-data"] }
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "source-requests-csv",
+      "source_kind": "csv",
+      "media_type": "text/csv",
+      "locator": "fixture://minimal-office/raw/requests.csv",
+      "captured_at": "2026-01-08T00:00:00Z",
+      "original_artifact_ref": "artifact:source-requests-csv",
+      "record_count": 3,
+      "classification": { "level": "synthetic", "tags": ["no-personal-data"] },
+      "masking": { "state": "unmasked" },
+      "provenance": [{ "kind": "source", "source_refs": ["source-requests-csv"] }]
+    },
+    {
+      "source_id": "source-handoffs-jsonl",
+      "source_kind": "api_audit",
+      "media_type": "application/jsonl",
+      "locator": "fixture://minimal-office/raw/handoffs.jsonl",
+      "captured_at": "2026-01-08T00:00:00Z",
+      "original_artifact_ref": "artifact:source-handoffs-jsonl",
+      "record_count": 5,
+      "classification": { "level": "synthetic", "tags": ["no-personal-data"] },
+      "masking": { "state": "unmasked" },
+      "provenance": [{ "kind": "source", "source_refs": ["source-handoffs-jsonl"] }]
+    },
+    {
+      "source_id": "source-procedure-markdown",
+      "source_kind": "procedure",
+      "media_type": "text/markdown",
+      "locator": "fixture://minimal-office/raw/procedure.md",
+      "captured_at": "2026-01-08T00:00:00Z",
+      "original_artifact_ref": "artifact:source-procedure-markdown",
+      "record_count": 1,
+      "classification": { "level": "synthetic", "tags": ["no-personal-data"] },
+      "masking": { "state": "unmasked" },
+      "provenance": [{ "kind": "source", "source_refs": ["source-procedure-markdown"] }]
+    }
+  ],
+  "records": [
+    {
+      "record_id": "record:request-001",
+      "source_ref": "source-requests-csv",
+      "record_kind": "csv_row",
+      "captured_at": "2026-01-08T00:00:00Z",
+      "observed_time": { "kind": "instant", "at": "2026-01-05T09:00:00Z", "precision": "exact" },
+      "original_artifact_ref": "artifact:source-requests-csv",
+      "source_locator": "row:2;request_id=REQ-001",
+      "claims": [
+        {
+          "path": "request_id",
+          "value": "REQ-001",
+          "status": "fact",
+          "provenance": [{ "kind": "normalized", "source_refs": ["source-requests-csv"] }]
+        },
+        {
+          "path": "status",
+          "value": "completed",
+          "status": "fact",
+          "provenance": [{ "kind": "normalized", "source_refs": ["source-requests-csv"] }]
+        },
+        {
+          "path": "domain.request.subject",
+          "value": "monthly report",
+          "status": "fact",
+          "provenance": [{ "kind": "normalized", "source_refs": ["source-requests-csv"] }]
+        }
+      ],
+      "classification": { "level": "synthetic", "tags": ["no-personal-data"] },
+      "masking": { "state": "unmasked" },
+      "provenance": [{ "kind": "normalized", "source_refs": ["source-requests-csv"] }]
+    },
+    {
+      "record_id": "record:event-001",
+      "source_ref": "source-handoffs-jsonl",
+      "record_kind": "audit_event",
+      "captured_at": "2026-01-08T00:00:00Z",
+      "observed_time": { "kind": "instant", "at": "2026-01-05T09:00:00Z", "precision": "exact" },
+      "original_artifact_ref": "artifact:source-handoffs-jsonl",
+      "source_locator": "line:1;event_id=EVT-001",
+      "claims": [
+        {
+          "path": "event_id",
+          "value": "EVT-001",
+          "status": "fact",
+          "provenance": [{ "kind": "normalized", "source_refs": ["source-handoffs-jsonl"] }]
+        },
+        {
+          "path": "action",
+          "value": "request_created",
+          "status": "fact",
+          "provenance": [{ "kind": "normalized", "source_refs": ["source-handoffs-jsonl"] }]
+        }
+      ],
+      "classification": { "level": "synthetic", "tags": ["no-personal-data"] },
+      "masking": { "state": "unmasked" },
+      "provenance": [{ "kind": "normalized", "source_refs": ["source-handoffs-jsonl"] }]
+    },
+    {
+      "record_id": "record:procedure-001",
+      "source_ref": "source-procedure-markdown",
+      "record_kind": "procedure_bullet",
+      "captured_at": "2026-01-08T00:00:00Z",
+      "observed_time": { "kind": "unknown", "precision": "unknown" },
+      "original_artifact_ref": "artifact:source-procedure-markdown",
+      "source_locator": "heading:Example Office observed procedure;bullet:1",
+      "claims": [
+        {
+          "path": "procedure.step",
+          "value": "A requester creates a request.",
+          "status": "fact",
+          "provenance": [{ "kind": "source", "source_refs": ["source-procedure-markdown"] }]
+        },
+        {
+          "path": "procedure.approval_policy",
+          "value": null,
+          "status": "unverified",
+          "provenance": [{ "kind": "source", "source_refs": ["source-procedure-markdown"] }]
+        }
+      ],
+      "classification": { "level": "synthetic", "tags": ["no-personal-data"] },
+      "masking": { "state": "unmasked" },
+      "provenance": [{ "kind": "source", "source_refs": ["source-procedure-markdown"] }]
+    }
+  ],
+  "events": [
+    {
+      "event_id": "event:request-created-001",
+      "evidence_refs": ["record:event-001", "record:request-001"],
+      "occurred_time": { "kind": "instant", "at": "2026-01-05T09:00:00Z", "precision": "exact" },
+      "subject": { "ref": "person-a", "status": "known" },
+      "action": "request_created",
+      "target_refs": ["request:REQ-001"],
+      "output_refs": ["request:REQ-001"],
+      "status": "fact",
+      "classification": { "level": "synthetic", "tags": ["no-personal-data"] },
+      "provenance": [
+        { "kind": "source", "source_refs": ["source-handoffs-jsonl"] },
+        { "kind": "normalized", "source_refs": ["source-requests-csv"] }
+      ],
+      "extensions": { "domain.workflow.example_status": "completed" }
+    },
+    {
+      "event_id": "event:approval-unknown-001",
+      "evidence_refs": ["record:procedure-001"],
+      "occurred_time": {
+        "kind": "unknown",
+        "precision": "unknown",
+        "note": "Procedure does not specify a timestamp."
+      },
+      "subject": { "status": "unknown" },
+      "action": "request_approval_policy",
+      "status": "unverified",
+      "assertions": [
+        {
+          "path": "approval.authority",
+          "value": null,
+          "status": "unverified",
+          "provenance": [{ "kind": "source", "source_refs": ["source-procedure-markdown"] }]
+        }
+      ],
+      "classification": { "level": "synthetic", "tags": ["no-personal-data"] },
+      "provenance": [{ "kind": "source", "source_refs": ["source-procedure-markdown"] }]
+    }
+  ]
+}

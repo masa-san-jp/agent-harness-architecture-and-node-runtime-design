@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:evidence-source:v1",
+  "title": "Evidence source",
+  "description": "Catalog metadata for a collection of source records.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "source_id",
+    "source_kind",
+    "media_type",
+    "locator",
+    "captured_at",
+    "original_artifact_ref",
+    "classification",
+    "masking",
+    "provenance"
+  ],
+  "properties": {
+    "source_id": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "source_kind": {
+      "type": "string",
+      "enum": [
+        "csv",
+        "email",
+        "chat",
+        "file_update",
+        "api_audit",
+        "procedure",
+        "spreadsheet",
+        "other"
+      ]
+    },
+    "media_type": {
+      "type": "string",
+      "pattern": "^[^\\s/]+/[^\\s]+$",
+      "maxLength": 128
+    },
+    "locator": {
+      "type": "string",
+      "format": "uri-reference",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "captured_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "observed_time": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/temporalObservation"
+    },
+    "original_artifact_ref": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "record_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "classification": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/classification"
+    },
+    "masking": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/masking"
+    },
+    "provenance": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/provenanceList"
+    },
+    "extensions": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/extensions"
+    }
+  }
+}

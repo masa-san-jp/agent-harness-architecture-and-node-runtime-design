@@ -1,0 +1,10 @@
+{
+  "contract_id": "artifact-ref",
+  "version": "1.0.0",
+  "status": "accepted",
+  "owner_issue": "#3",
+  "schema_path": "schemas/evidence/artifact-ref.v1.schema.json",
+  "normative_spec": "docs/architecture/evidence-contract.md",
+  "conformance_suite": "evidence-contract",
+  "compatibility": "initial"
+}
