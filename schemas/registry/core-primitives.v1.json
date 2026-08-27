@@ -1,0 +1,10 @@
+{
+  "contract_id": "core-primitives",
+  "version": "1.0.0",
+  "status": "accepted",
+  "owner_issue": "#12",
+  "schema_path": "schemas/core/",
+  "normative_spec": "docs/architecture/contract-registry.md",
+  "conformance_suite": "contract-registry",
+  "compatibility": "initial"
+}
