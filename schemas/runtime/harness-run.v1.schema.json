@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:harness-run:v1",
+  "title": "Harness run",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "draft_ref",
+    "mode",
+    "input_snapshot_ref",
+    "policy_ref",
+    "status",
+    "started_at"
+  ],
+  "properties": {
+    "run_id": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "draft_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "mode": { "enum": ["observe", "replay", "shadow", "assist", "execute"] },
+    "input_snapshot_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "policy_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "status": { "enum": ["authorized", "running", "completed", "failed", "denied"] },
+    "started_at": { "type": "string", "format": "date-time" },
+    "ended_at": { "type": "string", "format": "date-time" }
+  }
+}

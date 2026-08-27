@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:runtime-promotion:v1",
+  "title": "Runtime promotion bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["run", "events", "completion", "teardown"],
+  "properties": {
+    "run": { "$ref": "urn:agent-harness-reference:harness-run:v1" },
+    "events": {
+      "type": "array",
+      "items": { "$ref": "urn:agent-harness-reference:execution-event:v1" }
+    },
+    "completion": { "$ref": "urn:agent-harness-reference:completion-check:v1" },
+    "teardown": { "$ref": "urn:agent-harness-reference:teardown-result:v1" }
+  }
+}

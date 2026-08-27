@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:teardown-result:v1",
+  "title": "Ephemeral runtime teardown result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["run_ref", "credentials_revoked", "workspace_deleted", "completed_at"],
+  "properties": {
+    "run_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "credentials_revoked": { "const": true },
+    "workspace_deleted": { "const": true },
+    "completed_at": { "type": "string", "format": "date-time" }
+  }
+}

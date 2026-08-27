@@ -1,0 +1,10 @@
+{
+  "contract_id": "runtime-promotion",
+  "version": "1.0.0",
+  "status": "accepted",
+  "owner_issue": "#8",
+  "schema_path": "schemas/runtime/runtime-promotion.v1.schema.json",
+  "normative_spec": "docs/architecture/runtime-promotion-contract.md",
+  "conformance_suite": "runtime-promotion",
+  "compatibility": "initial"
+}

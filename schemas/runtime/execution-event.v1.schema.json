@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:execution-event:v1",
+  "title": "Execution event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["event_id", "run_ref", "kind", "occurred_at"],
+  "properties": {
+    "event_id": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "run_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "kind": {
+      "enum": ["authorized", "input_bound", "tool_called", "output_checked", "failed", "teardown"]
+    },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "detail": { "type": "string", "maxLength": 500 }
+  }
+}
