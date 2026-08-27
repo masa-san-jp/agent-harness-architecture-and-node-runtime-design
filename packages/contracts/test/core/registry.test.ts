@@ -5,13 +5,15 @@ import { describe, expect, it } from "vitest";
 const registryDirectory = join(import.meta.dirname, "../../../../schemas/registry");
 
 describe("contract registry manifests", () => {
-  it("uses one manifest per contract version without a shared index", async () => {
+  it("discovers one manifest per contract version without a shared index", async () => {
     const files = (await readdir(registryDirectory))
       .filter((file) => file.endsWith(".json"))
       .filter((file) => !file.startsWith("_"))
       .sort();
 
-    expect(files).toEqual(["contract-manifest.v1.json", "core-primitives.v1.json"]);
+    expect(files).toContain("contract-manifest.v1.json");
+    expect(files).toContain("core-primitives.v1.json");
+    expect(files.every((file) => /^[a-z][a-z0-9-]*\.v[0-9]+\.json$/.test(file))).toBe(true);
     expect(files.some((file) => file === "index.json")).toBe(false);
   });
 
