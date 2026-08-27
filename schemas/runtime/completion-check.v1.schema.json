@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:completion-check:v1",
+  "title": "Runtime completion check",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["run_ref", "passed", "checked_at", "reason"],
+  "properties": {
+    "run_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "passed": { "type": "boolean" },
+    "checked_at": { "type": "string", "format": "date-time" },
+    "reason": { "type": "string", "minLength": 1 }
+  }
+}

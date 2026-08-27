@@ -1,0 +1,11 @@
+{
+  "contract_id": "runtime-promotion",
+  "version": "1.0.0",
+  "modes": ["observe", "replay", "shadow", "assist", "execute"],
+  "read_only_modes": ["observe", "replay", "shadow", "assist"],
+  "replay_requires_snapshot": true,
+  "execute_requires": ["evaluation_passed", "approval_active"],
+  "required_events": ["authorized", "input_bound", "output_checked", "teardown"],
+  "teardown": ["credentials_revoked", "workspace_deleted"],
+  "external_network_default": "deny"
+}
