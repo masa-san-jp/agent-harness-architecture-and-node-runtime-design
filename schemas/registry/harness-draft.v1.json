@@ -1,0 +1,10 @@
+{
+  "contract_id": "harness-draft",
+  "version": "1.0.0",
+  "status": "accepted",
+  "owner_issue": "#6",
+  "schema_path": "schemas/harness/harness-draft.v1.schema.json",
+  "normative_spec": "docs/architecture/harness-draft-contract.md",
+  "conformance_suite": "harness-draft",
+  "compatibility": "initial"
+}

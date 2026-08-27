@@ -1,0 +1,23 @@
+{
+  "contract_id": "harness-draft",
+  "version": "1.0.0",
+  "source_contracts": ["bootstrap-lifecycle", "candidate-graph", "bootstrap-policy"],
+  "executable": false,
+  "default_target_mode": "observe",
+  "required_node_fields": [
+    "purpose",
+    "input",
+    "process",
+    "output",
+    "completion_condition",
+    "executor"
+  ],
+  "required_permissions": ["read_scopes", "write_scopes", "network"],
+  "required_controls": ["completion_check", "failure_handling", "logging", "teardown"],
+  "blocked_reasons": [
+    "NODE_FIELD_REQUIRES_CONFIRMATION",
+    "COMPLETION_CONDITION_REQUIRES_HUMAN_CONFIRMATION",
+    "FAILURE_HANDLING_REQUIRES_HUMAN_CONFIRMATION"
+  ],
+  "organization_values_are_references": true
+}
