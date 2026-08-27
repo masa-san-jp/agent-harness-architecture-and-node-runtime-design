@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:candidate-graph:v1",
+  "title": "Candidate graph",
+  "description": "A reviewable graph bundle and the inference run that produced it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["graph_id", "inference_run_ref", "nodes", "edges"],
+  "properties": {
+    "graph_id": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "inference_run_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "nodes": {
+      "type": "array",
+      "items": { "$ref": "urn:agent-harness-reference:candidate-node:v1" }
+    },
+    "edges": {
+      "type": "array",
+      "items": { "$ref": "urn:agent-harness-reference:candidate-edge:v1" }
+    }
+  }
+}

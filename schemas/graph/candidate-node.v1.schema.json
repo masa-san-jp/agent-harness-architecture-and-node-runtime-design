@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:candidate-node:v1",
+  "title": "Candidate business node",
+  "description": "A reviewable node hypothesis with six traceable business fields.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["node_id", "status", "confidence", "fields", "evidence_refs", "inference_run_ref"],
+  "properties": {
+    "node_id": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "status": { "enum": ["candidate", "insufficient", "ambiguous", "contradictory"] },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "fields": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "field",
+          "value",
+          "status",
+          "confidence",
+          "evidence_refs",
+          "provenance",
+          "source"
+        ],
+        "properties": {
+          "field": {
+            "enum": ["purpose", "input", "process", "output", "completion_condition", "executor"]
+          },
+          "value": {},
+          "status": {
+            "enum": ["fact", "inferred", "human_confirmed", "contradictory", "unverified"]
+          },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+          "evidence_refs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "$ref": "urn:agent-harness-reference:identifier:v1" }
+          },
+          "provenance": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "urn:agent-harness-reference:provenance:v1" }
+          },
+          "source": { "enum": ["deterministic", "model", "human"] }
+        }
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "urn:agent-harness-reference:identifier:v1" }
+    },
+    "inference_run_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "extensions": {
+      "type": "object",
+      "patternProperties": { "^(domain|local)\\.[a-z][a-z0-9_.-]*$": {} },
+      "additionalProperties": false
+    }
+  }
+}
