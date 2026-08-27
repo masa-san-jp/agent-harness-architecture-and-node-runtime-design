@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:evidence-shared:v1",
+  "title": "Shared evidence schema definitions",
+  "$defs": {
+    "extensions": {
+      "type": "object",
+      "description": "Namespaced domain and local data preserved without changing Core fields.",
+      "patternProperties": {
+        "^(core|domain|local)\\.[a-z][a-z0-9_.-]*$": {}
+      },
+      "additionalProperties": false
+    },
+    "masking": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state"],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": ["unmasked", "masked", "partially_masked", "unknown"]
+        },
+        "method_ref": {
+          "$ref": "urn:agent-harness-reference:identifier:v1"
+        },
+        "detected_by": {
+          "type": "string",
+          "enum": ["source_metadata", "deterministic", "human", "unknown"]
+        }
+      }
+    },
+    "temporalObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "precision"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["instant", "interval", "bounded", "unknown"]
+        },
+        "at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "earliest": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "latest": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "precision": {
+          "type": "string",
+          "enum": ["exact", "minute", "hour", "day", "unknown"]
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 500
+        }
+      }
+    },
+    "assertionStatus": {
+      "type": "string",
+      "enum": ["fact", "inferred", "human_confirmed", "contradictory", "unverified"]
+    },
+    "provenanceList": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "urn:agent-harness-reference:provenance:v1"
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "value", "status", "provenance"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+          "maxLength": 128
+        },
+        "value": {},
+        "status": {
+          "$ref": "#/$defs/assertionStatus"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenanceList"
+        }
+      }
+    },
+    "classification": {
+      "$ref": "urn:agent-harness-reference:classification-ref:v1"
+    }
+  }
+}

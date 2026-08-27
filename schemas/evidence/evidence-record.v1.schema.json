@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:evidence-record:v1",
+  "title": "Evidence record",
+  "description": "One addressable source record and its normalized claims.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_id",
+    "source_ref",
+    "record_kind",
+    "captured_at",
+    "original_artifact_ref",
+    "claims",
+    "classification",
+    "masking",
+    "provenance"
+  ],
+  "properties": {
+    "record_id": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "source_ref": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "record_kind": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_.-]{0,63}$"
+    },
+    "captured_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "observed_time": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/temporalObservation"
+    },
+    "original_artifact_ref": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "source_locator": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "claims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/claim"
+      }
+    },
+    "classification": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/classification"
+    },
+    "masking": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/masking"
+    },
+    "provenance": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/provenanceList"
+    },
+    "extensions": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/extensions"
+    }
+  }
+}

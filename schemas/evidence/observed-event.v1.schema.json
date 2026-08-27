@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:observed-event:v1",
+  "title": "Observed event",
+  "description": "An observed or explicitly qualified event linked to source evidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "evidence_refs",
+    "occurred_time",
+    "subject",
+    "action",
+    "status",
+    "classification",
+    "provenance"
+  ],
+  "properties": {
+    "event_id": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "urn:agent-harness-reference:identifier:v1"
+      }
+    },
+    "occurred_time": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/temporalObservation"
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "ref": {
+          "$ref": "urn:agent-harness-reference:identifier:v1"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["known", "unknown", "ambiguous", "withheld"]
+        }
+      }
+    },
+    "action": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_.:-]{0,127}$"
+    },
+    "target_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "urn:agent-harness-reference:identifier:v1"
+      }
+    },
+    "input_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "urn:agent-harness-reference:identifier:v1"
+      }
+    },
+    "output_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "urn:agent-harness-reference:identifier:v1"
+      }
+    },
+    "assertions": {
+      "type": "array",
+      "items": {
+        "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/claim"
+      }
+    },
+    "status": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/assertionStatus"
+    },
+    "system_ref": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "classification": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/classification"
+    },
+    "provenance": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/provenanceList"
+    },
+    "extensions": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/extensions"
+    }
+  }
+}

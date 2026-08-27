@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:artifact-ref:v1",
+  "title": "Artifact reference",
+  "description": "A content-addressed reference to original or derived material.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_id",
+    "locator",
+    "media_type",
+    "sha256",
+    "availability",
+    "masking",
+    "classification"
+  ],
+  "properties": {
+    "artifact_id": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "locator": {
+      "type": "string",
+      "format": "uri-reference",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "media_type": {
+      "type": "string",
+      "pattern": "^[^\\s/]+/[^\\s]+$",
+      "maxLength": 128
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "size_bytes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "availability": {
+      "type": "string",
+      "enum": ["stored", "reference_only", "withheld", "deleted"]
+    },
+    "masking": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/masking"
+    },
+    "classification": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/classification"
+    },
+    "captured_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "extensions": {
+      "$ref": "urn:agent-harness-reference:evidence-shared:v1#/$defs/extensions"
+    }
+  }
+}
