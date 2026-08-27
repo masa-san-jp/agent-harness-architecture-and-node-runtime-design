@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:data-handling-decision:v1",
+  "title": "Data handling decision",
+  "description": "Policy result for original access, derived data, model destination, and retention.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decision_id",
+    "data_ref",
+    "classification",
+    "source_access",
+    "derived_access",
+    "model_destination",
+    "masking_required",
+    "retention_days",
+    "effect",
+    "reason_codes",
+    "evaluated_at"
+  ],
+  "properties": {
+    "decision_id": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "data_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "classification": { "type": "string", "minLength": 1 },
+    "source_access": { "enum": ["allow", "deny"] },
+    "derived_access": { "enum": ["allow", "deny"] },
+    "model_destination": { "enum": ["none", "local", "external"] },
+    "masking_required": { "type": "boolean" },
+    "retention_days": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["original", "derived"],
+      "properties": {
+        "original": { "type": "integer", "minimum": 0 },
+        "derived": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "effect": { "enum": ["allow", "deny"] },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$" }
+    },
+    "evaluated_at": { "type": "string", "format": "date-time" },
+    "extensions": {
+      "type": "object",
+      "patternProperties": { "^(domain|local)\\.[a-z][a-z0-9_.-]*$": {} },
+      "additionalProperties": false
+    }
+  }
+}

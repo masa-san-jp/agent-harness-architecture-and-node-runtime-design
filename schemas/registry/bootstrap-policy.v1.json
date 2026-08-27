@@ -1,0 +1,10 @@
+{
+  "contract_id": "bootstrap-policy",
+  "version": "1.0.0",
+  "status": "accepted",
+  "owner_issue": "#9",
+  "schema_path": "schemas/policy/bootstrap-policy.v1.schema.json",
+  "normative_spec": "docs/security/bootstrap-control-requirements.md",
+  "conformance_suite": "bootstrap-security",
+  "compatibility": "initial"
+}
