@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:bootstrap-run-manifest:v1",
+  "title": "Reproducible bootstrap run manifest",
+  "description": "References and version identities needed to reproduce and audit one bootstrap run.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest_id",
+    "version",
+    "profile_ref",
+    "profile_digest",
+    "input_catalog_ref",
+    "input_catalog_digest",
+    "contract_versions",
+    "policy_ref",
+    "policy_digest",
+    "policy_decision_ref",
+    "lifecycle_state",
+    "mode",
+    "draft_ref",
+    "review_question_refs",
+    "run_ref",
+    "approval_refs",
+    "teardown_ref",
+    "started_at",
+    "ended_at",
+    "reproducible",
+    "network"
+  ],
+  "properties": {
+    "manifest_id": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "version": { "$ref": "urn:agent-harness-reference:semver:v1" },
+    "profile_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "profile_digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "input_catalog_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "input_catalog_digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "contract_versions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bootstrap_lifecycle",
+        "evidence_importer_port",
+        "observed_event",
+        "candidate_graph",
+        "harness_draft",
+        "bootstrap_policy",
+        "review_contract",
+        "runtime_promotion"
+      ],
+      "properties": {
+        "bootstrap_lifecycle": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]+@[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "evidence_importer_port": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]+@[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "observed_event": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]+@[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "candidate_graph": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]+@[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "harness_draft": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]+@[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "bootstrap_policy": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]+@[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "review_contract": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]+@[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "runtime_promotion": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]+@[0-9]+\\.[0-9]+\\.[0-9]+$"
+        }
+      }
+    },
+    "policy_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "policy_digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "policy_decision_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "lifecycle_state": {
+      "enum": [
+        "no_harness",
+        "evidence_ready",
+        "candidate_model",
+        "draft_review",
+        "observe",
+        "replay",
+        "shadow",
+        "assist",
+        "execute"
+      ]
+    },
+    "mode": { "enum": ["observe", "replay", "shadow", "assist", "execute"] },
+    "draft_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "review_question_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "urn:agent-harness-reference:identifier:v1" }
+    },
+    "run_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "approval_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "urn:agent-harness-reference:identifier:v1" }
+    },
+    "teardown_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "started_at": { "type": "string", "format": "date-time" },
+    "ended_at": { "type": "string", "format": "date-time" },
+    "reproducible": { "const": true },
+    "network": { "enum": ["none", "internal", "external"] },
+    "external_network_approval_ref": {
+      "$ref": "urn:agent-harness-reference:identifier:v1"
+    },
+    "extensions": {
+      "type": "object",
+      "patternProperties": {
+        "^(domain|local)\\.[a-z][a-z0-9_.-]*$": {}
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -29,3 +29,16 @@ review change set.
 Replay requires a fixed input snapshot reference and no tool/write/network request. Execute requires
 both a passing evaluation and an active approval. These checks are enforced by the control kernel,
 not by the CLI's natural-language output.
+
+## The profile is rejected
+
+Check that every input path is relative to `--input`, every source points to a declared adapter,
+and the profile's policy and runtime references are identifiers rather than inline configuration.
+Credential values belong in the organization's secret manager; only a `credential_ref` may appear
+in the profile. External network and execute mode require explicit approval boundaries.
+
+## The run is not reproducible
+
+Keep the profile, policy, input bytes, contract versions, mode, and capture timestamp fixed. The
+CLI writes references and SHA-256 digests to the run manifest, never raw evidence or policy
+contents. A changed input or profile should produce a new manifest identity.
