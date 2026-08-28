@@ -14,8 +14,11 @@
     "@agent-harness/profile": "workspace:*"
   },
   "scripts": {
+    "prebuild": "pnpm --config.engine-strict=false --filter @agent-harness/evidence-importer build && pnpm --config.engine-strict=false --filter @agent-harness/profile build",
     "build": "tsc -p tsconfig.json",
+    "pretypecheck": "pnpm --config.engine-strict=false --filter @agent-harness/evidence-importer build && pnpm --config.engine-strict=false --filter @agent-harness/profile build",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "pretest": "pnpm --config.engine-strict=false --filter @agent-harness/evidence-importer build && pnpm --config.engine-strict=false --filter @agent-harness/profile build",
     "test": "vitest run --passWithNoTests"
   },
   "devDependencies": {
