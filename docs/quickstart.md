@@ -28,6 +28,19 @@ The command creates `.tmp/bootstrap-storage/bootstrap-storage.sqlite`. Reopen it
 Storage Port to retrieve the Catalog or Run Manifest by the references printed in the CLI JSON.
 The input `raw/` directory is not copied or modified.
 
+To run an organization adapter from a trusted local bundle, add `--adapter-bundle`:
+
+```sh
+pnpm --filter @agent-harness/reference-cli run cli \
+  --input fixtures/bootstrap/adapter-bundle-v1/raw \
+  --policy fixtures/bootstrap/minimal-office-v1/expected/security/policy.json \
+  --profile fixtures/bootstrap/adapter-bundle-v1/profile.json \
+  --adapter-bundle fixtures/bootstrap/adapter-bundle-v1/bundle/manifest.json
+```
+
+The CLI uses only adapters declared by the Profile. It prints the selected adapter IDs and records
+the bundle digest in the Run Manifest under `local.adapter_bundle_digest`.
+
 The CLI prints JSON containing the contract versions, source and record counts, candidate graph
 counts, readiness status, policy decision, replay status, teardown result, and run manifest. No raw fixture file
 is modified, uploaded, or deleted. Replace the `--input` directory with an approved local export;

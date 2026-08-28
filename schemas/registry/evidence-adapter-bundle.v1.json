@@ -1,0 +1,10 @@
+{
+  "contract_id": "evidence-adapter-bundle",
+  "version": "1.0.0",
+  "status": "accepted",
+  "owner_issue": "#34",
+  "schema_path": "schemas/adapter/evidence-adapter-bundle.v1.schema.json",
+  "normative_spec": "docs/architecture/adapter-registry.md",
+  "conformance_suite": "adapter-registry",
+  "compatibility": "initial"
+}

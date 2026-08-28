@@ -1,0 +1,43 @@
+{
+  "profile_id": "profile:adapter-bundle",
+  "version": "1.0.0",
+  "organization_ref": "organization:reference",
+  "tenant_ref": "tenant:one",
+  "classification": {
+    "level": "synthetic",
+    "tags": ["no-personal-data", "no-secrets"]
+  },
+  "masking": { "state": "unmasked" },
+  "input_sources": [
+    {
+      "source_ref": "source-custom-ticket",
+      "path": "ticket.org-export",
+      "media_type": "application/octet-stream",
+      "adapter_ref": "reference-org-ticket",
+      "read_only": true
+    }
+  ],
+  "adapters": [
+    {
+      "adapter_ref": "reference-org-ticket",
+      "version": "1.0.0",
+      "source_kind": "other",
+      "authentication": "none"
+    }
+  ],
+  "policy_ref": "policy:minimal-office",
+  "review": {
+    "reviewer_refs": ["person:reference-reviewer"],
+    "independent_for_high_risk": true
+  },
+  "runtime": {
+    "default_mode": "observe",
+    "allowed_modes": ["observe", "replay"],
+    "network": "none",
+    "approval_required": true,
+    "executor_ref": "executor:reference-fake"
+  },
+  "extensions": {
+    "local.reference_fixture": "adapter-bundle-v1"
+  }
+}

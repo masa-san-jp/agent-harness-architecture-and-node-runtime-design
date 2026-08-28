@@ -1,6 +1,7 @@
 import { spawn } from "node:child_process";
 
 const packages = [
+  "@agent-harness/adapter-registry",
   "@agent-harness/evidence-importer",
   "@agent-harness/graph-inference",
   "@agent-harness/harness-draft",

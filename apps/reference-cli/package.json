@@ -10,6 +10,7 @@
     "cli": "node src/cli.mjs"
   },
   "dependencies": {
+    "@agent-harness/adapter-registry": "workspace:*",
     "@agent-harness/evidence-importer": "workspace:*",
     "@agent-harness/graph-inference": "workspace:*",
     "@agent-harness/harness-draft": "workspace:*",

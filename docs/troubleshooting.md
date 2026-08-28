@@ -50,3 +50,10 @@ Use a writable directory with `--store`. The reference adapter creates
 with different payload content is rejected as `IMMUTABLE_RECORD_CONFLICT`; reusing it with changed
 tenant, classification, or masking metadata is rejected as `STORAGE_METADATA_CONFLICT`. Inspect the
 stored reference digest before retrying.
+
+## The adapter bundle is rejected
+
+Check that the bundle module path is a relative `*.mjs` path within the bundle directory, its
+default (or named `adapter`) export implements `supports` and `parse`, and its adapter ID, version,
+and source kind exactly match both the Profile and bundle manifest. The loader rejects symlink
+escapes and does not provide credentials or a network client to adapter code.

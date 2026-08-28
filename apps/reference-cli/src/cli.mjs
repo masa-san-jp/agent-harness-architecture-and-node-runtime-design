@@ -8,6 +8,7 @@ import { assessReadiness, createHarnessDraft } from "@agent-harness/harness-draf
 import { runEphemeral } from "@agent-harness/ephemeral-runtime";
 import { evaluatePolicy } from "@agent-harness/policy-evaluator";
 import { generateReviewQuestions } from "@agent-harness/review-workflow";
+import { createAdapterRegistry, loadAdapterBundle } from "@agent-harness/adapter-registry";
 import { openSqliteStorage } from "@agent-harness/storage";
 import { createRunManifest, loadProfile } from "./profile.mjs";
 
@@ -84,13 +85,18 @@ export async function runBootstrap(
   policyPath = defaultPolicy,
   profilePath = defaultProfile,
   storeDirectory,
+  adapterBundlePath,
 ) {
   const profile = await loadProfile(profilePath);
+  const adapterBundle = adapterBundlePath ? await loadAdapterBundle(adapterBundlePath) : undefined;
+  const adapterRegistry = createAdapterRegistry(adapterBundle?.adapters ?? []);
+  const adapters = adapterRegistry.adaptersFor(profile);
   const catalog = await importDirectory(inputDirectory, {
     capturedAt,
     classification: profile.classification,
     masking: profile.masking,
     dryRun: true,
+    adapters,
   });
   validateProfileBindings(profile, catalog);
   const events = eventsFromCatalog(catalog);
@@ -166,6 +172,9 @@ export async function runBootstrap(
     startedAt: capturedAt,
     endedAt: capturedAt,
     network: profile.runtime.network,
+    ...(adapterBundle
+      ? { extensions: { "local.adapter_bundle_digest": adapterBundle.digest } }
+      : {}),
   });
 
   let storageResult;
@@ -202,6 +211,7 @@ export async function runBootstrap(
       record_count: catalog.records.length,
       diagnostics: catalog.diagnostics,
       read_only: catalog.read_only,
+      adapter_ids: [...new Set(catalog.outcomes.map((outcome) => outcome.adapter_id))],
     },
     graph: {
       node_count: inference.graph.nodes.length,
@@ -227,6 +237,16 @@ export async function runBootstrap(
       workspace_deleted: replay.teardown.workspace_deleted,
     },
     run_manifest: manifest,
+    ...(adapterBundle
+      ? {
+          adapter_bundle: {
+            id: adapterBundle.manifest.bundle_id,
+            version: adapterBundle.manifest.version,
+            digest: adapterBundle.digest,
+            adapter_refs: adapterBundle.adapters.map((adapter) => adapter.adapterId),
+          },
+        }
+      : {}),
     ...(storageResult ? { storage: storageResult } : {}),
   };
 }
@@ -244,14 +264,25 @@ export async function main(args = process.argv.slice(2)) {
   const policyOption = option(args, "--policy", defaultPolicy);
   const profileOption = option(args, "--profile", defaultProfile);
   const storeOption = option(args, "--store", undefined);
+  const adapterBundleOption = option(args, "--adapter-bundle", undefined);
   const input = resolve(process.env.INIT_CWD ?? process.cwd(), inputOption);
   const policyPath = resolve(process.env.INIT_CWD ?? process.cwd(), policyOption);
   const profilePath = resolve(process.env.INIT_CWD ?? process.cwd(), profileOption);
   const storeDirectory = storeOption
     ? resolve(process.env.INIT_CWD ?? process.cwd(), storeOption)
     : undefined;
+  const adapterBundlePath = adapterBundleOption
+    ? resolve(process.env.INIT_CWD ?? process.cwd(), adapterBundleOption)
+    : undefined;
   const capturedAt = option(args, "--captured-at", defaultCapturedAt);
-  const result = await runBootstrap(input, capturedAt, policyPath, profilePath, storeDirectory);
+  const result = await runBootstrap(
+    input,
+    capturedAt,
+    policyPath,
+    profilePath,
+    storeDirectory,
+    adapterBundlePath,
+  );
   console.log(JSON.stringify(result, null, 2));
   return result;
 }
