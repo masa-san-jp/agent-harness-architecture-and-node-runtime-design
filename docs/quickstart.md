@@ -1,19 +1,41 @@
 # Reference bootstrap quickstart
 
-This walkthrough runs entirely against the synthetic offline fixture. It starts with raw records,
-creates a catalog, derives a candidate graph, creates a non-executable HarnessDraft, asks review
-questions, and performs a replay with a fake executor.
+This walkthrough runs from the repository root against the synthetic offline fixture. It starts
+with raw records, creates a Catalog, derives a Candidate Graph, creates a non-executable
+HarnessDraft, asks review questions, and performs a replay with a fake executor.
+
+The reference path is runnable, but it is not a production harness: it does not retrieve data from
+external systems, call an LLM, execute real tools, or provide an approval service. Use it to verify
+the contracts and to establish the organization-specific boundaries before connecting those
+systems.
+
+## Prerequisites
+
+Use Node.js `24.20.0` and pnpm `10.34.5`, as pinned by `.node-version`, `package.json`, and CI.
+Run the commands below from the repository root.
+
+## First run
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm --filter @agent-harness/reference-cli test
 pnpm --filter @agent-harness/reference-cli run cli \
   --input fixtures/bootstrap/minimal-office-v1/raw \
   --policy fixtures/bootstrap/minimal-office-v1/expected/security/policy.json \
   --profile fixtures/bootstrap/minimal-office-v1/expected/profile/minimal-office.json \
   --captured-at 2026-01-08T00:00:00Z
+pnpm --filter @agent-harness/reference-cli test
 pnpm conformance
 ```
+
+The CLI output is JSON. A successful reference run includes a read-only Catalog, a non-executable
+HarnessDraft, a completed replay, revoked credentials, deleted temporary workspace state, and a
+Run Manifest containing the fixed input/profile/policy references. The CLI does not modify, upload,
+or delete the fixture's `raw/` files.
+
+The first `run cli` invocation builds the workspace packages required by the CLI automatically.
+The package test also builds them, so either command is safe on a clean checkout.
+
+## Optional local persistence
 
 To persist only the derived Catalog and Run Manifest in the local reference SQLite adapter, add
 `--store`:
@@ -39,16 +61,19 @@ pnpm --filter @agent-harness/reference-cli run cli \
 ```
 
 The CLI uses only adapters declared by the Profile. It prints the selected adapter IDs and records
-the bundle digest in the Run Manifest under `local.adapter_bundle_digest`.
+the bundle digest in the Run Manifest under `local.adapter_bundle_digest`. The bundle loader is a
+trusted local-code boundary; production deployments need their own code review, signing,
+distribution, and sandboxing controls.
 
 The CLI prints JSON containing the contract versions, source and record counts, candidate graph
 counts, readiness status, policy decision, replay status, teardown result, and run manifest. No raw fixture file
 is modified, uploaded, or deleted. Replace the `--input` directory with an approved local export;
 keep the capture time fixed when comparing or replaying a run.
 
-The reference CLI uses a fake replay executor and does not connect to an external model, business
-system, or network service. A real adapter or executor must be introduced behind the contracts and
-policy gates owned by the corresponding package.
+The reference CLI uses a fake replay executor and, on the default path, does not connect to an
+external model, business system, or network service. A real adapter or executor must be introduced
+behind the contracts and policy gates owned by the corresponding package. Treat the generated
+HarnessDraft as a review artifact, not as permission to execute a business process.
 
 ## Organization adapter authoring
 
