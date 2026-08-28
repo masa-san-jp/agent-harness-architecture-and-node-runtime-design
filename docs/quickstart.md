@@ -35,6 +35,33 @@ or delete the fixture's `raw/` files.
 The first `run cli` invocation builds the workspace packages required by the CLI automatically.
 The package test also builds them, so either command is safe on a clean checkout.
 
+## Generate an organization scaffold
+
+When starting with no existing Profile, Policy, or adapter, generate a non-overwriting scaffold:
+
+```sh
+pnpm --filter @agent-harness/reference-cli run cli -- --init ./organization-bootstrap
+```
+
+The command creates a deny-by-default `policy.json`, a Profile bound to a synthetic JSONL sample,
+an optional custom adapter bundle template, and a `.gitignore` for future files under `input/` and
+`adapter-input/`.
+It fails if the target directory is not empty. Replace the `replace-me` identifiers, add only
+approved Policy rules, and never put credentials or production exports into the generated directory.
+
+Validate the generated configuration and input binding before using an organization export:
+
+```sh
+pnpm --filter @agent-harness/reference-cli run cli -- \
+  --validate \
+  --input ./organization-bootstrap/input \
+  --policy ./organization-bootstrap/policy.json \
+  --profile ./organization-bootstrap/profile.json
+```
+
+The scaffold README contains the equivalent custom-adapter command. `--help` lists all options and
+`--version` reports the reference CLI version.
+
 ## Optional local persistence
 
 To persist only the derived Catalog and Run Manifest in the local reference SQLite adapter, add

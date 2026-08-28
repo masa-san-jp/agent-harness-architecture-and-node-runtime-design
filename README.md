@@ -74,6 +74,15 @@ pnpm conformance
 pnpm verify
 ```
 
+設定だけをbootstrap前に確認する場合は `--validate` を使います。組織向けのProfile・Policy・adapter bundle・synthetic inputの雛形を作る場合は `--init` を使います。
+
+```sh
+pnpm --filter @agent-harness/reference-cli run cli -- --validate
+pnpm --filter @agent-harness/reference-cli run cli -- --init ./organization-bootstrap
+```
+
+`--init` は既存ファイルを上書きしません。生成先が空でない場合はエラーになるため、実データの入ったディレクトリを指定しても破壊しません。
+
 Node.jsやpnpmのバージョンが異なる場合は、先に `.node-version` と `package.json` の `engines` に合わせてください。CIもこの固定バージョンで実行します。
 
 ## 自分の組織の記録へ置き換える
@@ -94,6 +103,8 @@ Profileは入力source、adapter、tenant、classification、masking、policy参
 
 組織固有のparserはtrusted local bundleとして追加できます。bundleのmanifestとProfileでadapter ID・version・source kindを一致させてください。詳細なfixtureと例は [`docs/quickstart.md`](./docs/quickstart.md) を参照してください。
 
+手作業で空の契約JSONを作る代わりに、まず `--init ./organization-bootstrap` で雛形を生成し、`profile.json`、`policy.json`、`input/`、`adapter-bundle/` を組織のルールに合わせて編集します。生成されたREADMEにも検証・実行コマンドがあります。
+
 ## よく使うCLIオプション
 
 | オプション | 用途 | 既定値・注意 |
@@ -104,6 +115,9 @@ Profileは入力source、adapter、tenant、classification、masking、policy参
 | `--captured-at <ISO-8601>` | 実行・capture時刻を固定 | `2026-01-08T00:00:00Z` |
 | `--store <dir>` | CatalogとRun ManifestをSQLiteへ保存 | 未指定なら永続化しない |
 | `--adapter-bundle <manifest>` | trusted local adapter bundleをロード | 未指定ならbuilt-in adapterのみ |
+| `--validate` | Profile・Policy・adapter bundle・input bindingを実行前に検証 | 永続化しない |
+| `--init <dir>` | 組織導入用の安全な雛形を生成 | 既存ファイルは上書きしない |
+| `--help` / `--version` | CLIの使い方・バージョンを表示 | bootstrapしない |
 
 `--store` を使ってもraw入力、資格情報、network responseはSQLiteへコピーしません。`--adapter-bundle` を使ってもadapterへcredentialやnetwork clientは渡しません。現在のCLIのreplayはfake executorであり、`HarnessDraft`は意図的に非実行です。
 

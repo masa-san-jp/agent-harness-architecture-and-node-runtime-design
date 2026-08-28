@@ -1,0 +1,4 @@
+input/*
+!input/events.jsonl
+adapter-input/*
+!adapter-input/events.org-export

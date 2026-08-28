@@ -1,0 +1,43 @@
+{
+  "profile_id": "profile:organization-bootstrap-custom-adapter",
+  "version": "1.0.0",
+  "organization_ref": "organization:replace-me",
+  "tenant_ref": "tenant:replace-me",
+  "classification": {
+    "level": "internal",
+    "tags": ["replace-before-use"]
+  },
+  "masking": { "state": "unknown" },
+  "input_sources": [
+    {
+      "source_ref": "source-events-custom",
+      "path": "events.org-export",
+      "media_type": "application/octet-stream",
+      "adapter_ref": "organization-example",
+      "read_only": true
+    }
+  ],
+  "adapters": [
+    {
+      "adapter_ref": "organization-example",
+      "version": "1.0.0",
+      "source_kind": "other",
+      "authentication": "none"
+    }
+  ],
+  "policy_ref": "policy:organization-bootstrap",
+  "review": {
+    "reviewer_refs": ["person:replace-me"],
+    "independent_for_high_risk": true
+  },
+  "runtime": {
+    "default_mode": "observe",
+    "allowed_modes": ["observe", "replay"],
+    "network": "none",
+    "approval_required": true,
+    "executor_ref": "executor:reference-fake"
+  },
+  "extensions": {
+    "local.scaffold": "organization-bootstrap-v1-custom-adapter"
+  }
+}

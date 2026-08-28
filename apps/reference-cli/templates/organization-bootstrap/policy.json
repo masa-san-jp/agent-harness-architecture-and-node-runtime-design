@@ -1,0 +1,27 @@
+{
+  "contract_id": "bootstrap-policy",
+  "version": "1.0.0",
+  "policy_id": "policy:organization-bootstrap",
+  "default_effect": "deny",
+  "actions": [
+    "evidence.read_metadata",
+    "evidence.read_original",
+    "storage.write_derived",
+    "model.infer",
+    "model.external_send",
+    "tool.execute",
+    "runtime.execute",
+    "audit.append"
+  ],
+  "rules": [],
+  "classification_order": ["public", "synthetic", "internal", "confidential", "restricted"],
+  "external_model_classifications": [],
+  "require_masking_for_external": true,
+  "retention": [
+    {
+      "classification": "internal",
+      "original_days": 30,
+      "derived_days": 60
+    }
+  ]
+}
