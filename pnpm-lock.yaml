@@ -46,6 +46,9 @@ importers:
       "@agent-harness/review-workflow":
         specifier: workspace:*
         version: link:../../packages/review-workflow
+      "@agent-harness/storage":
+        specifier: workspace:*
+        version: link:../../packages/storage
     devDependencies:
       vitest:
         specifier: 3.2.4
@@ -164,6 +167,25 @@ importers:
         version: 3.2.4(@types/node@24.10.0)
 
   packages/review-workflow:
+    devDependencies:
+      "@types/node":
+        specifier: 24.10.0
+        version: 24.10.0
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: 3.2.4
+        version: 3.2.4(@types/node@24.10.0)
+
+  packages/storage:
+    dependencies:
+      "@agent-harness/evidence-importer":
+        specifier: workspace:*
+        version: link:../evidence-importer
+      "@agent-harness/profile":
+        specifier: workspace:*
+        version: link:../profile
     devDependencies:
       "@types/node":
         specifier: 24.10.0

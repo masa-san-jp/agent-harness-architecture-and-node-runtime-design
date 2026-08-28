@@ -1,8 +1,10 @@
-import { readFile } from "node:fs/promises";
+import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { openSqliteStorage } from "@agent-harness/storage";
 import { runBootstrap } from "../src/cli.mjs";
 
 describe("reference bootstrap CLI", () => {
@@ -50,5 +52,40 @@ describe("reference bootstrap CLI", () => {
     const expectedManifest = { ...expected };
     delete expectedManifest.contract_id;
     expect(result.run_manifest).toEqual(expectedManifest);
+  });
+
+  it("persists only derived catalog and run manifest references when --store is supplied", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "agent-harness-reference-cli-"));
+    try {
+      const result = await runBootstrap(undefined, undefined, undefined, undefined, directory);
+      expect(result.storage).toMatchObject({
+        catalog: {
+          kind: "catalog",
+          ref: result.catalog.id,
+          tenant_ref: "tenant:one",
+          classification_level: "synthetic",
+          masking_state: "unmasked",
+        },
+        run_manifest: {
+          kind: "run_manifest",
+          ref: result.run_manifest.manifest_id,
+        },
+      });
+      expect(await readdir(directory)).toEqual(["bootstrap-storage.sqlite"]);
+
+      const storage = await openSqliteStorage(directory);
+      try {
+        expect(await storage.getRunManifest(result.run_manifest.manifest_id)).toEqual(
+          result.run_manifest,
+        );
+        const catalog = await storage.getCatalog(result.catalog.id);
+        expect(catalog.catalog_id).toBe(result.catalog.id);
+        expect(catalog.records).toHaveLength(result.catalog.record_count);
+      } finally {
+        storage.close();
+      }
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
   });
 });

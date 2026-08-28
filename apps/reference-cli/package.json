@@ -16,7 +16,8 @@
     "@agent-harness/policy-evaluator": "workspace:*",
     "@agent-harness/profile": "workspace:*",
     "@agent-harness/review-workflow": "workspace:*",
-    "@agent-harness/ephemeral-runtime": "workspace:*"
+    "@agent-harness/ephemeral-runtime": "workspace:*",
+    "@agent-harness/storage": "workspace:*"
   },
   "devDependencies": {
     "vitest": "3.2.4"

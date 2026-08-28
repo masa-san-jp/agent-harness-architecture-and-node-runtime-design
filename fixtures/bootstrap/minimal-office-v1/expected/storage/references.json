@@ -1,0 +1,26 @@
+{
+  "contract_id": "bootstrap-storage",
+  "version": "1.0.0",
+  "catalog": {
+    "kind": "catalog",
+    "ref": "catalog:d5cd2e7b13fcf1326490d7b4c73960c0",
+    "contract_id": "evidence-importer-port",
+    "version": "1.0.0",
+    "sha256": "16cf3c0bd06444e83bf6fd9d81e8f50397d4a81d1b5ebe8bce04086f175f10ac",
+    "tenant_ref": "tenant:one",
+    "classification_level": "synthetic",
+    "masking_state": "unmasked"
+  },
+  "run_manifest": {
+    "kind": "run_manifest",
+    "ref": "run-manifest:ca01b27d6eaedf549d6fff1a",
+    "contract_id": "bootstrap-run-manifest",
+    "version": "1.0.0",
+    "sha256": "cd46bd34abb1cdd73130a85a98fb3987b6121de508b71523835564fc8875d933",
+    "tenant_ref": "tenant:one",
+    "classification_level": "synthetic",
+    "masking_state": "unmasked"
+  },
+  "raw_files_persisted": false,
+  "persisted_files": ["bootstrap-storage.sqlite"]
+}
