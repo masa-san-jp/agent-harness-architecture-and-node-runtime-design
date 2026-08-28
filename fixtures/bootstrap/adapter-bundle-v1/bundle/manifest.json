@@ -1,0 +1,13 @@
+{
+  "bundle_id": "bundle:reference-org",
+  "version": "1.0.0",
+  "adapters": [
+    {
+      "adapter_ref": "reference-org-ticket",
+      "version": "1.0.0",
+      "source_kind": "other",
+      "module_path": "org-ticket.mjs",
+      "read_only": true
+    }
+  ]
+}

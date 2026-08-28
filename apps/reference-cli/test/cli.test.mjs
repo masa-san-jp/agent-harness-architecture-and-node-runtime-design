@@ -2,10 +2,10 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { openSqliteStorage } from "@agent-harness/storage";
-import { runBootstrap } from "../src/cli.mjs";
+import { main, runBootstrap } from "../src/cli.mjs";
 
 describe("reference bootstrap CLI", () => {
   it("reproduces the offline path from raw evidence to replay teardown", async () => {
@@ -86,6 +86,61 @@ describe("reference bootstrap CLI", () => {
       }
     } finally {
       await rm(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("executes only the adapters declared by the profile from a trusted bundle", async () => {
+    const fixtureRoot = join(import.meta.dirname, "../../../fixtures/bootstrap/adapter-bundle-v1");
+    const result = await runBootstrap(
+      join(fixtureRoot, "raw"),
+      "2026-01-08T00:00:00Z",
+      join(
+        import.meta.dirname,
+        "../../../fixtures/bootstrap/minimal-office-v1/expected/security/policy.json",
+      ),
+      join(fixtureRoot, "profile.json"),
+      undefined,
+      join(fixtureRoot, "bundle/manifest.json"),
+    );
+
+    expect(result.catalog).toMatchObject({
+      source_count: 1,
+      record_count: 1,
+      adapter_ids: ["reference-org-ticket"],
+      read_only: true,
+    });
+    expect(result.adapter_bundle).toMatchObject({
+      id: "bundle:reference-org",
+      version: "1.0.0",
+      adapter_refs: ["reference-org-ticket"],
+    });
+    expect(result.adapter_bundle.digest).toMatch(/^[a-f0-9]{64}$/);
+    expect(result.run_manifest.extensions).toEqual({
+      "local.adapter_bundle_digest": result.adapter_bundle.digest,
+    });
+  });
+
+  it("accepts the adapter bundle through the CLI option", async () => {
+    const fixtureRoot = join(import.meta.dirname, "../../../fixtures/bootstrap/adapter-bundle-v1");
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    try {
+      const result = await main([
+        "--input",
+        join(fixtureRoot, "raw"),
+        "--policy",
+        join(
+          import.meta.dirname,
+          "../../../fixtures/bootstrap/minimal-office-v1/expected/security/policy.json",
+        ),
+        "--profile",
+        join(fixtureRoot, "profile.json"),
+        "--adapter-bundle",
+        join(fixtureRoot, "bundle/manifest.json"),
+      ]);
+      expect(result.catalog.adapter_ids).toEqual(["reference-org-ticket"]);
+      expect(result.adapter_bundle.id).toBe("bundle:reference-org");
+    } finally {
+      log.mockRestore();
     }
   });
 });

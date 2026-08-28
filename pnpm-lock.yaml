@@ -25,6 +25,9 @@ importers:
 
   apps/reference-cli:
     dependencies:
+      "@agent-harness/adapter-registry":
+        specifier: workspace:*
+        version: link:../../packages/adapter-registry
       "@agent-harness/ephemeral-runtime":
         specifier: workspace:*
         version: link:../../packages/ephemeral-runtime
@@ -50,6 +53,25 @@ importers:
         specifier: workspace:*
         version: link:../../packages/storage
     devDependencies:
+      vitest:
+        specifier: 3.2.4
+        version: 3.2.4(@types/node@24.10.0)
+
+  packages/adapter-registry:
+    dependencies:
+      "@agent-harness/evidence-importer":
+        specifier: workspace:*
+        version: link:../evidence-importer
+      "@agent-harness/profile":
+        specifier: workspace:*
+        version: link:../profile
+    devDependencies:
+      "@types/node":
+        specifier: 24.10.0
+        version: 24.10.0
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
       vitest:
         specifier: 3.2.4
         version: 3.2.4(@types/node@24.10.0)
