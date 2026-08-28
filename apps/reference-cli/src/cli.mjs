@@ -8,6 +8,7 @@ import { assessReadiness, createHarnessDraft } from "@agent-harness/harness-draf
 import { runEphemeral } from "@agent-harness/ephemeral-runtime";
 import { evaluatePolicy } from "@agent-harness/policy-evaluator";
 import { generateReviewQuestions } from "@agent-harness/review-workflow";
+import { openSqliteStorage } from "@agent-harness/storage";
 import { createRunManifest, loadProfile } from "./profile.mjs";
 
 const fixtureRoot = fileURLToPath(
@@ -82,6 +83,7 @@ export async function runBootstrap(
   capturedAt = defaultCapturedAt,
   policyPath = defaultPolicy,
   profilePath = defaultProfile,
+  storeDirectory,
 ) {
   const profile = await loadProfile(profilePath);
   const catalog = await importDirectory(inputDirectory, {
@@ -166,6 +168,27 @@ export async function runBootstrap(
     network: profile.runtime.network,
   });
 
+  let storageResult;
+  if (storeDirectory) {
+    const storageAdapter = await openSqliteStorage(storeDirectory);
+    try {
+      const context = {
+        tenant_ref: profile.tenant_ref,
+        classification_level: profile.classification.level,
+        masking_state: profile.masking.state,
+      };
+      const catalogReference = await storageAdapter.putCatalog(catalog, context);
+      const manifestReference = await storageAdapter.putRunManifest(manifest, context);
+      storageResult = {
+        database_path: storageAdapter.databasePath,
+        catalog: catalogReference,
+        run_manifest: manifestReference,
+      };
+    } finally {
+      storageAdapter.close();
+    }
+  }
+
   return {
     contract_versions: manifest.contract_versions,
     profile: {
@@ -204,23 +227,31 @@ export async function runBootstrap(
       workspace_deleted: replay.teardown.workspace_deleted,
     },
     run_manifest: manifest,
+    ...(storageResult ? { storage: storageResult } : {}),
   };
 }
 
 function option(args, name, fallback) {
   const index = args.indexOf(name);
-  return index >= 0 ? (args[index + 1] ?? fallback) : fallback;
+  if (index < 0) return fallback;
+  const value = args[index + 1];
+  if (!value || value.startsWith("--")) throw new Error(`${name} requires a value`);
+  return value;
 }
 
 export async function main(args = process.argv.slice(2)) {
   const inputOption = option(args, "--input", defaultInput);
   const policyOption = option(args, "--policy", defaultPolicy);
   const profileOption = option(args, "--profile", defaultProfile);
+  const storeOption = option(args, "--store", undefined);
   const input = resolve(process.env.INIT_CWD ?? process.cwd(), inputOption);
   const policyPath = resolve(process.env.INIT_CWD ?? process.cwd(), policyOption);
   const profilePath = resolve(process.env.INIT_CWD ?? process.cwd(), profileOption);
+  const storeDirectory = storeOption
+    ? resolve(process.env.INIT_CWD ?? process.cwd(), storeOption)
+    : undefined;
   const capturedAt = option(args, "--captured-at", defaultCapturedAt);
-  const result = await runBootstrap(input, capturedAt, policyPath, profilePath);
+  const result = await runBootstrap(input, capturedAt, policyPath, profilePath, storeDirectory);
   console.log(JSON.stringify(result, null, 2));
   return result;
 }

@@ -15,6 +15,19 @@ pnpm --filter @agent-harness/reference-cli run cli \
 pnpm conformance
 ```
 
+To persist only the derived Catalog and Run Manifest in the local reference SQLite adapter, add
+`--store`:
+
+```sh
+pnpm --filter @agent-harness/reference-cli run cli \
+  --profile fixtures/bootstrap/minimal-office-v1/expected/profile/minimal-office.json \
+  --store ./.tmp/bootstrap-storage
+```
+
+The command creates `.tmp/bootstrap-storage/bootstrap-storage.sqlite`. Reopen it through the
+Storage Port to retrieve the Catalog or Run Manifest by the references printed in the CLI JSON.
+The input `raw/` directory is not copied or modified.
+
 The CLI prints JSON containing the contract versions, source and record counts, candidate graph
 counts, readiness status, policy decision, replay status, teardown result, and run manifest. No raw fixture file
 is modified, uploaded, or deleted. Replace the `--input` directory with an approved local export;
@@ -41,14 +54,15 @@ Validate a new adapter in this order:
 
 The reference compatibility matrix is:
 
-| Surface                | Reference version              | Checked by                               | Organization-specific change                         |
-| ---------------------- | ------------------------------ | ---------------------------------------- | ---------------------------------------------------- |
-| Evidence importer port | `evidence-importer-port@1.0.0` | adapter smoke test, importer conformance | adapter and source authentication outside Core       |
-| Candidate graph        | `candidate-graph@1.0.0`        | graph conformance                        | mapping or inference model                           |
-| HarnessDraft           | `harness-draft@1.0.0`          | draft conformance                        | profile, skill, tool, and adapter bindings           |
-| Bootstrap policy       | `bootstrap-policy@1.0.0`       | security conformance                     | tenant, classification, masking, and retention rules |
-| Review workflow        | `review-contract@1.0.0`        | review conformance                       | reviewer identity and approval routing               |
-| Runtime promotion      | `runtime-promotion@1.0.0`      | runtime conformance and replay test      | executor, workspace, and credential providers        |
+| Surface                | Reference version              | Checked by                               | Organization-specific change                          |
+| ---------------------- | ------------------------------ | ---------------------------------------- | ----------------------------------------------------- |
+| Evidence importer port | `evidence-importer-port@1.0.0` | adapter smoke test, importer conformance | adapter and source authentication outside Core        |
+| Candidate graph        | `candidate-graph@1.0.0`        | graph conformance                        | mapping or inference model                            |
+| HarnessDraft           | `harness-draft@1.0.0`          | draft conformance                        | profile, skill, tool, and adapter bindings            |
+| Bootstrap policy       | `bootstrap-policy@1.0.0`       | security conformance                     | tenant, classification, masking, and retention rules  |
+| Review workflow        | `review-contract@1.0.0`        | review conformance                       | reviewer identity and approval routing                |
+| Runtime promotion      | `runtime-promotion@1.0.0`      | runtime conformance and replay test      | executor, workspace, and credential providers         |
+| Bootstrap storage      | `bootstrap-storage@1.0.0`      | storage conformance and reopen test      | database, object store, retention, and access adapter |
 
 An organization may replace an adapter, model, policy profile, or executor while keeping these
 Core contracts stable. A contract change must follow the version and compatibility rules in

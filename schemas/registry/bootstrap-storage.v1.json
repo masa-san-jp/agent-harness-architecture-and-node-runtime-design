@@ -1,0 +1,10 @@
+{
+  "contract_id": "bootstrap-storage",
+  "version": "1.0.0",
+  "status": "accepted",
+  "owner_issue": "#32",
+  "schema_path": "schemas/storage/bootstrap-storage.v1.schema.json",
+  "normative_spec": "docs/architecture/storage-port.md",
+  "conformance_suite": "storage",
+  "compatibility": "initial"
+}

@@ -42,3 +42,11 @@ in the profile. External network and execute mode require explicit approval boun
 Keep the profile, policy, input bytes, contract versions, mode, and capture timestamp fixed. The
 CLI writes references and SHA-256 digests to the run manifest, never raw evidence or policy
 contents. A changed input or profile should produce a new manifest identity.
+
+## The stored record cannot be written
+
+Use a writable directory with `--store`. The reference adapter creates
+`bootstrap-storage.sqlite` and does not copy raw input files. Reusing the same kind and reference
+with different payload content is rejected as `IMMUTABLE_RECORD_CONFLICT`; reusing it with changed
+tenant, classification, or masking metadata is rejected as `STORAGE_METADATA_CONFLICT`. Inspect the
+stored reference digest before retrying.

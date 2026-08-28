@@ -6,6 +6,7 @@ const packages = [
   "@agent-harness/harness-draft",
   "@agent-harness/policy-evaluator",
   "@agent-harness/profile",
+  "@agent-harness/storage",
   "@agent-harness/review-workflow",
   "@agent-harness/control-kernel",
   "@agent-harness/ephemeral-runtime",
