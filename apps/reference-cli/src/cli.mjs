@@ -8,13 +8,26 @@ import { assessReadiness, createHarnessDraft } from "@agent-harness/harness-draf
 import { runEphemeral } from "@agent-harness/ephemeral-runtime";
 import { evaluatePolicy } from "@agent-harness/policy-evaluator";
 import { generateReviewQuestions } from "@agent-harness/review-workflow";
+import { createRunManifest, loadProfile } from "./profile.mjs";
 
 const fixtureRoot = fileURLToPath(
   new URL("../../../fixtures/bootstrap/minimal-office-v1/", import.meta.url),
 );
 const defaultInput = `${fixtureRoot}raw`;
 const defaultPolicy = `${fixtureRoot}expected/security/policy.json`;
+const defaultProfile = `${fixtureRoot}expected/profile/minimal-office.json`;
 const defaultCapturedAt = "2026-01-08T00:00:00Z";
+
+const contractVersions = {
+  bootstrap_lifecycle: "bootstrap-lifecycle@1.0.0",
+  evidence_importer_port: "evidence-importer-port@1.0.0",
+  observed_event: "observed-event@1.0.0",
+  candidate_graph: "candidate-graph@1.0.0",
+  harness_draft: "harness-draft@1.0.0",
+  bootstrap_policy: "bootstrap-policy@1.0.0",
+  review_contract: "review-contract@1.0.0",
+  runtime_promotion: "runtime-promotion@1.0.0",
+};
 
 function claimValue(record, path) {
   return record.claims.find((claim) => claim.path === path)?.value;
@@ -44,17 +57,40 @@ async function readPolicy(policyPath) {
   return JSON.parse(await readFile(policyPath, "utf8"));
 }
 
+function validateProfileBindings(profile, catalog) {
+  const declaredPaths = new Set(profile.input_sources.map((source) => source.path));
+  const declaredAdapters = new Set(profile.adapters.map((adapter) => adapter.adapter_ref));
+  for (const source of catalog.sources) {
+    if (!declaredPaths.has(source.locator)) {
+      throw new Error(`PROFILE_SOURCE_NOT_DECLARED: ${source.locator}`);
+    }
+  }
+  for (const source of profile.input_sources) {
+    if (!catalog.sources.some((candidate) => candidate.locator === source.path)) {
+      throw new Error(`PROFILE_SOURCE_NOT_IMPORTED: ${source.path}`);
+    }
+  }
+  for (const outcome of catalog.outcomes) {
+    if (outcome.status === "parsed" && !declaredAdapters.has(outcome.adapter_id)) {
+      throw new Error(`PROFILE_ADAPTER_NOT_DECLARED: ${outcome.adapter_id}`);
+    }
+  }
+}
+
 export async function runBootstrap(
   inputDirectory = defaultInput,
   capturedAt = defaultCapturedAt,
   policyPath = defaultPolicy,
+  profilePath = defaultProfile,
 ) {
+  const profile = await loadProfile(profilePath);
   const catalog = await importDirectory(inputDirectory, {
     capturedAt,
-    classification: { level: "synthetic", tags: ["offline-fixture"] },
-    masking: { state: "unmasked" },
+    classification: profile.classification,
+    masking: profile.masking,
     dryRun: true,
   });
+  validateProfileBindings(profile, catalog);
   const events = eventsFromCatalog(catalog);
   if (events.length === 0) throw new Error("No audit-like events were imported");
 
@@ -62,9 +98,10 @@ export async function runBootstrap(
   const node = inference.graph.nodes[0];
   if (!node) throw new Error("Inference produced no candidate node");
   const draft = createHarnessDraft(node, {
-    targetMode: "observe",
+    targetMode: profile.runtime.default_mode,
     evaluatedAt: capturedAt,
-    policyRef: "policy:minimal-office@1.0.0",
+    profileRefs: [profile.profile_id],
+    policyRef: profile.policy_ref,
   });
   const readiness = assessReadiness(draft, capturedAt);
   const questions = generateReviewQuestions(draft, { createdAt: capturedAt });
@@ -73,12 +110,12 @@ export async function runBootstrap(
     {
       request_id: "request:reference-cli-metadata",
       subject_ref: "person:reference-cli",
-      subject_tenant_ref: "tenant:one",
+      subject_tenant_ref: profile.tenant_ref,
       action: "evidence.read_metadata",
       resource_refs: catalog.records.slice(0, 1).map((record) => record.record_id),
-      resource_tenant_ref: "tenant:one",
-      classification: "synthetic",
-      network: "none",
+      resource_tenant_ref: profile.tenant_ref,
+      classification: profile.classification.level,
+      network: profile.runtime.network,
       integrity_verified: true,
       human_approved: false,
       masking_state: "unmasked",
@@ -91,12 +128,12 @@ export async function runBootstrap(
     {
       request_id: "request:reference-cli-replay",
       draft_ref: draft.draft_id,
-      policy_ref: "policy:minimal-office@1.0.0",
+      policy_ref: profile.policy_ref,
       mode: "replay",
       input_snapshot_ref: catalog.catalog_id,
       tool_requested: false,
       write_requested: false,
-      network: "none",
+      network: profile.runtime.network,
       evaluation_passed: false,
       approval_active: false,
       prompt_injection_detected: false,
@@ -109,15 +146,32 @@ export async function runBootstrap(
       teardown: async () => ({ credentialsRevoked: true, workspaceDeleted: true }),
     },
   );
+  const manifest = createRunManifest({
+    profile,
+    inputCatalogRef: catalog.catalog_id,
+    inputCatalog: catalog,
+    contractVersions,
+    policyRef: profile.policy_ref,
+    policy,
+    policyDecisionRef: policyDecision.decision_id,
+    lifecycleState: "replay",
+    mode: "replay",
+    draftRef: draft.draft_id,
+    reviewQuestionRefs: questions.map((question) => question.question_id),
+    runRef: replay.run.run_id,
+    approvalRefs: [],
+    teardownRef: `teardown:${replay.run.run_id}`,
+    startedAt: capturedAt,
+    endedAt: capturedAt,
+    network: profile.runtime.network,
+  });
 
   return {
-    contract_versions: {
-      importer: "evidence-importer-port@1.0.0",
-      graph: "candidate-graph@1.0.0",
-      draft: "harness-draft@1.0.0",
-      policy: "bootstrap-policy@1.0.0",
-      review: "review-contract@1.0.0",
-      runtime: "runtime-promotion@1.0.0",
+    contract_versions: manifest.contract_versions,
+    profile: {
+      id: profile.profile_id,
+      version: profile.version,
+      digest: manifest.profile_digest,
     },
     catalog: {
       id: catalog.catalog_id,
@@ -149,6 +203,7 @@ export async function runBootstrap(
       credentials_revoked: replay.teardown.credentials_revoked,
       workspace_deleted: replay.teardown.workspace_deleted,
     },
+    run_manifest: manifest,
   };
 }
 
@@ -160,10 +215,12 @@ function option(args, name, fallback) {
 export async function main(args = process.argv.slice(2)) {
   const inputOption = option(args, "--input", defaultInput);
   const policyOption = option(args, "--policy", defaultPolicy);
+  const profileOption = option(args, "--profile", defaultProfile);
   const input = resolve(process.env.INIT_CWD ?? process.cwd(), inputOption);
   const policyPath = resolve(process.env.INIT_CWD ?? process.cwd(), policyOption);
+  const profilePath = resolve(process.env.INIT_CWD ?? process.cwd(), profileOption);
   const capturedAt = option(args, "--captured-at", defaultCapturedAt);
-  const result = await runBootstrap(input, capturedAt, policyPath);
+  const result = await runBootstrap(input, capturedAt, policyPath, profilePath);
   console.log(JSON.stringify(result, null, 2));
   return result;
 }

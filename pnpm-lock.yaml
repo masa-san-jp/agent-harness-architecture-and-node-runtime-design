@@ -40,6 +40,9 @@ importers:
       "@agent-harness/policy-evaluator":
         specifier: workspace:*
         version: link:../../packages/policy-evaluator
+      "@agent-harness/profile":
+        specifier: workspace:*
+        version: link:../../packages/profile
       "@agent-harness/review-workflow":
         specifier: workspace:*
         version: link:../../packages/review-workflow
@@ -137,6 +140,18 @@ importers:
         version: 3.2.4(@types/node@24.10.0)
 
   packages/policy-evaluator:
+    devDependencies:
+      "@types/node":
+        specifier: 24.10.0
+        version: 24.10.0
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: 3.2.4
+        version: 3.2.4(@types/node@24.10.0)
+
+  packages/profile:
     devDependencies:
       "@types/node":
         specifier: 24.10.0

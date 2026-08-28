@@ -1,0 +1,69 @@
+{
+  "profile_id": "profile:minimal-office",
+  "version": "1.0.0",
+  "organization_ref": "organization:reference",
+  "tenant_ref": "tenant:one",
+  "classification": {
+    "level": "synthetic",
+    "tags": ["no-personal-data", "no-secrets"]
+  },
+  "masking": { "state": "unmasked" },
+  "input_sources": [
+    {
+      "source_ref": "source-requests-csv",
+      "path": "requests.csv",
+      "media_type": "text/csv",
+      "adapter_ref": "builtin-csv",
+      "read_only": true
+    },
+    {
+      "source_ref": "source-handoffs-jsonl",
+      "path": "handoffs.jsonl",
+      "media_type": "application/jsonl",
+      "adapter_ref": "builtin-jsonl",
+      "read_only": true
+    },
+    {
+      "source_ref": "source-procedure-markdown",
+      "path": "procedure.md",
+      "media_type": "text/markdown",
+      "adapter_ref": "builtin-markdown",
+      "read_only": true
+    }
+  ],
+  "adapters": [
+    {
+      "adapter_ref": "builtin-csv",
+      "version": "1.0.0",
+      "source_kind": "csv",
+      "authentication": "none"
+    },
+    {
+      "adapter_ref": "builtin-jsonl",
+      "version": "1.0.0",
+      "source_kind": "api_audit",
+      "authentication": "none"
+    },
+    {
+      "adapter_ref": "builtin-markdown",
+      "version": "1.0.0",
+      "source_kind": "procedure",
+      "authentication": "none"
+    }
+  ],
+  "policy_ref": "policy:minimal-office",
+  "review": {
+    "reviewer_refs": ["person:reference-reviewer"],
+    "independent_for_high_risk": true
+  },
+  "runtime": {
+    "default_mode": "observe",
+    "allowed_modes": ["observe", "replay"],
+    "network": "none",
+    "approval_required": true,
+    "executor_ref": "executor:reference-fake"
+  },
+  "extensions": {
+    "local.reference_fixture": "minimal-office-v1"
+  }
+}

@@ -14,6 +14,7 @@
     "@agent-harness/graph-inference": "workspace:*",
     "@agent-harness/harness-draft": "workspace:*",
     "@agent-harness/policy-evaluator": "workspace:*",
+    "@agent-harness/profile": "workspace:*",
     "@agent-harness/review-workflow": "workspace:*",
     "@agent-harness/ephemeral-runtime": "workspace:*"
   },

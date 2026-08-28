@@ -22,4 +22,5 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @agent-harness/reference-cli test
+      - run: pnpm conformance -- --suite profile
       - run: pnpm conformance -- --suite bootstrap-e2e

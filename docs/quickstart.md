@@ -10,12 +10,13 @@ pnpm --filter @agent-harness/reference-cli test
 pnpm --filter @agent-harness/reference-cli run cli \
   --input fixtures/bootstrap/minimal-office-v1/raw \
   --policy fixtures/bootstrap/minimal-office-v1/expected/security/policy.json \
+  --profile fixtures/bootstrap/minimal-office-v1/expected/profile/minimal-office.json \
   --captured-at 2026-01-08T00:00:00Z
 pnpm conformance
 ```
 
 The CLI prints JSON containing the contract versions, source and record counts, candidate graph
-counts, readiness status, policy decision, replay status, and teardown result. No raw fixture file
+counts, readiness status, policy decision, replay status, teardown result, and run manifest. No raw fixture file
 is modified, uploaded, or deleted. Replace the `--input` directory with an approved local export;
 keep the capture time fixed when comparing or replaying a run.
 

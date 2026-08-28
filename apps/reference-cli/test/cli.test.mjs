@@ -1,3 +1,6 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import { runBootstrap } from "../src/cli.mjs";
@@ -13,6 +16,10 @@ describe("reference bootstrap CLI", () => {
     });
     expect(result.graph.node_count).toBeGreaterThan(0);
     expect(result.graph.edge_count).toBeGreaterThan(0);
+    expect(result.profile).toMatchObject({
+      id: "profile:minimal-office",
+      version: "1.0.0",
+    });
     expect(result.draft).toMatchObject({ executable: false, target_mode: "observe" });
     expect(result.policy_decision).toMatchObject({ effect: "allow", audit_required: true });
     expect(result.replay).toEqual({
@@ -21,5 +28,27 @@ describe("reference bootstrap CLI", () => {
       credentials_revoked: true,
       workspace_deleted: true,
     });
+    expect(result.run_manifest).toMatchObject({
+      version: "1.0.0",
+      profile_ref: "profile:minimal-office",
+      policy_ref: "policy:minimal-office",
+      lifecycle_state: "replay",
+      mode: "replay",
+      reproducible: true,
+      network: "none",
+      approval_refs: [],
+    });
+    const expected = JSON.parse(
+      await readFile(
+        join(
+          import.meta.dirname,
+          "../../../fixtures/bootstrap/minimal-office-v1/expected/profile/run-manifest.json",
+        ),
+        "utf8",
+      ),
+    );
+    const expectedManifest = { ...expected };
+    delete expectedManifest.contract_id;
+    expect(result.run_manifest).toEqual(expectedManifest);
   });
 });

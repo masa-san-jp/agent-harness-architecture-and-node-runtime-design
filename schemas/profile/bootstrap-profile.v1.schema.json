@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-harness-reference:bootstrap-profile:v1",
+  "title": "Organization bootstrap profile",
+  "description": "A secret-free declaration of organization-specific bootstrap boundaries and providers.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_id",
+    "version",
+    "organization_ref",
+    "tenant_ref",
+    "classification",
+    "masking",
+    "input_sources",
+    "adapters",
+    "policy_ref",
+    "review",
+    "runtime"
+  ],
+  "properties": {
+    "profile_id": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "version": { "$ref": "urn:agent-harness-reference:semver:v1" },
+    "organization_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "tenant_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "tags"],
+      "properties": {
+        "level": { "type": "string", "minLength": 1 },
+        "tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "masking": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state"],
+      "properties": {
+        "state": { "enum": ["unmasked", "masked", "partially_masked", "unknown"] },
+        "method_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" }
+      }
+    },
+    "input_sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_ref", "path", "media_type", "adapter_ref", "read_only"],
+        "properties": {
+          "source_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+          "path": { "type": "string", "minLength": 1, "pattern": "^(?!.*\\.\\.).+$" },
+          "media_type": { "type": "string", "minLength": 1 },
+          "adapter_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+          "read_only": { "const": true }
+        }
+      }
+    },
+    "adapters": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["adapter_ref", "version", "source_kind", "authentication"],
+        "properties": {
+          "adapter_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+          "version": { "$ref": "urn:agent-harness-reference:semver:v1" },
+          "source_kind": {
+            "enum": [
+              "csv",
+              "email",
+              "chat",
+              "file_update",
+              "api_audit",
+              "procedure",
+              "spreadsheet",
+              "other"
+            ]
+          },
+          "authentication": {
+            "enum": ["none", "workload_identity", "credential_reference"]
+          },
+          "credential_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" }
+        }
+      }
+    },
+    "policy_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewer_refs", "independent_for_high_risk"],
+      "properties": {
+        "reviewer_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "urn:agent-harness-reference:identifier:v1" }
+        },
+        "independent_for_high_risk": { "const": true }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default_mode", "allowed_modes", "network", "approval_required", "executor_ref"],
+      "properties": {
+        "default_mode": {
+          "enum": ["observe", "replay", "shadow", "assist", "execute"]
+        },
+        "allowed_modes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["observe", "replay", "shadow", "assist", "execute"] }
+        },
+        "network": { "enum": ["none", "internal", "external"] },
+        "approval_required": { "const": true },
+        "executor_ref": { "$ref": "urn:agent-harness-reference:identifier:v1" },
+        "external_network_approval_ref": {
+          "$ref": "urn:agent-harness-reference:identifier:v1"
+        }
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "patternProperties": {
+        "^(domain|local)\\.[a-z][a-z0-9_.-]*$": {}
+      },
+      "additionalProperties": false
+    }
+  }
+}

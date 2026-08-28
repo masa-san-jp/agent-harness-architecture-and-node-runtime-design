@@ -1,0 +1,38 @@
+{
+  "contract_id": "bootstrap-run-manifest",
+  "version": "1.0.0",
+  "manifest_id": "run-manifest:ca01b27d6eaedf549d6fff1a",
+  "profile_ref": "profile:minimal-office",
+  "profile_digest": "2701b4151aa11640d8f515e31e991e00fe79a1ccba12b6cb68a4ea8947db1c19",
+  "input_catalog_ref": "catalog:d5cd2e7b13fcf1326490d7b4c73960c0",
+  "input_catalog_digest": "16cf3c0bd06444e83bf6fd9d81e8f50397d4a81d1b5ebe8bce04086f175f10ac",
+  "contract_versions": {
+    "bootstrap_lifecycle": "bootstrap-lifecycle@1.0.0",
+    "evidence_importer_port": "evidence-importer-port@1.0.0",
+    "observed_event": "observed-event@1.0.0",
+    "candidate_graph": "candidate-graph@1.0.0",
+    "harness_draft": "harness-draft@1.0.0",
+    "bootstrap_policy": "bootstrap-policy@1.0.0",
+    "review_contract": "review-contract@1.0.0",
+    "runtime_promotion": "runtime-promotion@1.0.0"
+  },
+  "policy_ref": "policy:minimal-office",
+  "policy_digest": "f67f677e65e687424332f53ac5dd93627e7ce0f7cc28f4c76d7461f420289135",
+  "policy_decision_ref": "decision:fce98d5b3bb37247a5d0e0f6",
+  "lifecycle_state": "replay",
+  "mode": "replay",
+  "draft_ref": "draft:dcf1efa0a96023ccaee58aaf",
+  "run_ref": "run:b9c7e0dfd0bf99ae3d6a2e14",
+  "review_question_refs": [
+    "question:57815dd8a5fdb4e933dddf48",
+    "question:f437d5e2365e1b31a017bcd4",
+    "question:d2de672dc1e5fefad6e06ed4",
+    "question:cda5f8b54abc7ea17bf31cd9"
+  ],
+  "approval_refs": [],
+  "teardown_ref": "teardown:run:b9c7e0dfd0bf99ae3d6a2e14",
+  "started_at": "2026-01-08T00:00:00Z",
+  "ended_at": "2026-01-08T00:00:00Z",
+  "reproducible": true,
+  "network": "none"
+}
