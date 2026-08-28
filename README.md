@@ -11,6 +11,145 @@ status: "Design Philosophy"
 > 業務を「人が担当している仕事」ではなく、目的・入力・処理・出力・完了条件を持つ構造として捉え直す。  
 > その構造を既存の成果物とログから発見し、人間が改善し、実行主体だけを人間からAIへ段階的に置き換えていく。
 
+[![Validate](https://github.com/masa-san-jp/agent-harness-architecture-and-node-runtime-design/actions/workflows/validate.yml/badge.svg)](https://github.com/masa-san-jp/agent-harness-architecture-and-node-runtime-design/actions/workflows/validate.yml)
+[![Reference E2E](https://github.com/masa-san-jp/agent-harness-architecture-and-node-runtime-design/actions/workflows/reference-e2e.yml/badge.svg)](https://github.com/masa-san-jp/agent-harness-architecture-and-node-runtime-design/actions/workflows/reference-e2e.yml)
+
+> **現在地**: Node.jsで動くローカル参照実装（`v0.1.0`）です。本番導入済みの製品や、外部システムへ接続する完成済みハーネスではありません。
+
+## まずこのリポジトリでできること
+
+ハーネスがまだない組織が、承認済みの実ログ・記録を持ち込む前に、次のブートストラップ経路をsynthetic fixtureで再現できます。
+
+```text
+ローカルの記録
+  → 読取専用 Evidence Importer
+  → 証跡 Catalog
+  → 仮説 Candidate Graph
+  → 非実行 HarnessDraft とレビュー質問
+  → fake executorによる replay
+  → Run Manifest（任意でローカルSQLiteへ保存）
+```
+
+含まれるもの:
+
+- 記録を壊さずに読み取るImporterと、内容のハッシュ・来歴・診断を持つCatalog
+- 証跡から候補ノード・エッジを作る推定境界
+- ProfileとPolicyに基づくadapter選択、権限境界、レビュー質問、再現可能なRun Manifest
+- `replay` とteardownを含む短命runtimeの最小参照実装
+- 組織固有のadapter、Profile、Policy、Storage、executorを差し替えるための契約とconformance
+
+含まれないもの:
+
+- 外部SaaS・業務システムからの認証付きexport取得
+- LLM、対話UI、実ツール実行、production workspace、資格情報管理
+- 人間の承認画面、組織のID基盤、監査基盤、バックアップ・保持・削除運用
+- SQLite adapterをそのまま本番運用するための可用性・暗号化・アクセス制御設計
+
+つまり、これは「組織ごとの実装を始めるための境界付きリファレンス」です。既存のログや記録をそのまま本番へ送る製品ではなく、読取専用の観測からレビュー可能な候補と契約を作るための出発点です。
+
+## 5分で動かす
+
+リポジトリのルートで実行してください。前提はNode.js `24.20.0` とpnpm `10.34.5` です。`.node-version` と `packageManager` に同じバージョンを固定しています。
+
+```sh
+pnpm install --frozen-lockfile
+pnpm --filter @agent-harness/reference-cli run cli
+```
+
+CLIはネットワークへ接続せず、`fixtures/bootstrap/minimal-office-v1/` を既定入力としてJSONを標準出力へ返します。成功時に、少なくとも次を確認できます。
+
+```text
+catalog.read_only          = true
+draft.executable           = false
+replay.status              = completed
+replay.credentials_revoked = true
+replay.workspace_deleted   = true
+```
+
+初回実行後に参照実装全体を検証する場合:
+
+```sh
+pnpm --filter @agent-harness/reference-cli test
+pnpm conformance
+pnpm verify
+```
+
+Node.jsやpnpmのバージョンが異なる場合は、先に `.node-version` と `package.json` の `engines` に合わせてください。CIもこの固定バージョンで実行します。
+
+## 自分の組織の記録へ置き換える
+
+組織適用時も、最初から外部サービスへ接続せず、承認済みのローカルexportを `--input` で渡します。
+
+```sh
+pnpm --filter @agent-harness/reference-cli run cli \
+  --input path/to/approved-export \
+  --policy path/to/bootstrap-policy.json \
+  --profile path/to/bootstrap-profile.json \
+  --captured-at 2026-01-08T00:00:00Z
+```
+
+Profileは入力source、adapter、tenant、classification、masking、policy参照、runtime境界を宣言します。組織固有の認証やexport取得はImporterの外側で行い、Importerにはbytesと限定されたmetadataだけを渡します。未確認事項や不足する完了条件は、推測で埋めずレビュー質問として残します。
+
+標準Importerが扱う拡張子はCSV、JSON、JSONL、Markdown（`.md` / `.markdown`）、plain text（`.txt` / `.text`）です。それ以外の形式やvendor固有exportは、診断を確認したうえで組織固有adapterを追加してください。
+
+組織固有のparserはtrusted local bundleとして追加できます。bundleのmanifestとProfileでadapter ID・version・source kindを一致させてください。詳細なfixtureと例は [`docs/quickstart.md`](./docs/quickstart.md) を参照してください。
+
+## よく使うCLIオプション
+
+| オプション | 用途 | 既定値・注意 |
+| --- | --- | --- |
+| `--input <dir>` | 読み取る承認済みlocal export | `minimal-office-v1/raw` |
+| `--policy <file>` | bootstrap policy JSON | `minimal-office-v1/expected/security/policy.json` |
+| `--profile <file>` | organization profile JSON | `minimal-office-v1/expected/profile/minimal-office.json` |
+| `--captured-at <ISO-8601>` | 実行・capture時刻を固定 | `2026-01-08T00:00:00Z` |
+| `--store <dir>` | CatalogとRun ManifestをSQLiteへ保存 | 未指定なら永続化しない |
+| `--adapter-bundle <manifest>` | trusted local adapter bundleをロード | 未指定ならbuilt-in adapterのみ |
+
+`--store` を使ってもraw入力、資格情報、network responseはSQLiteへコピーしません。`--adapter-bundle` を使ってもadapterへcredentialやnetwork clientは渡しません。現在のCLIのreplayはfake executorであり、`HarnessDraft`は意図的に非実行です。
+
+## リポジトリ案内
+
+| パス | 役割 |
+| --- | --- |
+| [`apps/reference-cli`](./apps/reference-cli) | synthetic fixtureとlocal exportを処理する実行入口 |
+| [`packages/evidence-importer`](./packages/evidence-importer) | 読取専用ImporterとCatalog |
+| [`packages/graph-inference`](./packages/graph-inference) | Observed EventからCandidate Graphを作る境界 |
+| [`packages/profile`](./packages/profile) / [`packages/adapter-registry`](./packages/adapter-registry) | 組織Profile、adapter選択、bundle検証 |
+| [`packages/harness-draft`](./packages/harness-draft) / [`packages/review-workflow`](./packages/review-workflow) | 非実行Draft、readiness、レビュー質問 |
+| [`packages/control-kernel`](./packages/control-kernel) / [`packages/ephemeral-runtime`](./packages/ephemeral-runtime) | policy gate、mode境界、replay、teardown |
+| [`packages/storage`](./packages/storage) | CatalogとRun Manifestのlocal SQLite参照adapter |
+| [`packages/conformance`](./packages/conformance) | 契約・fixture・security・E2Eの適合性検証 |
+| [`fixtures/bootstrap`](./fixtures/bootstrap) | synthetic入力、期待結果、adapter bundle例 |
+| [`schemas`](./schemas) | versioned JSON Schemaとcontract registry |
+| [`docs/architecture`](./docs/architecture) | 契約、状態遷移、互換性、SSOT |
+| [`docs/security`](./docs/security) | policyとbootstrap threat model |
+| [`docs/engineering`](./docs/engineering) | 実装基線とconformance作成規則 |
+
+## 次に読む文書
+
+- 初めて動かす: [`docs/quickstart.md`](./docs/quickstart.md)
+- エラーを調べる: [`docs/troubleshooting.md`](./docs/troubleshooting.md)
+- 全体の考え方: [`詳細設計`](#詳細設計) と [`docs/architecture/20260824-business-node-driven-agent-harness-architecture-design.md`](./docs/architecture/20260824-business-node-driven-agent-harness-architecture-design.md)
+- 組織ProfileとRun Manifest: [`docs/architecture/profile-and-run-manifest.md`](./docs/architecture/profile-and-run-manifest.md)
+- adapterの境界: [`docs/architecture/adapter-registry.md`](./docs/architecture/adapter-registry.md) と [`docs/architecture/evidence-importer-port.md`](./docs/architecture/evidence-importer-port.md)
+- 安全境界: [`docs/security/bootstrap-control-requirements.md`](./docs/security/bootstrap-control-requirements.md) と [`docs/security/bootstrap-threat-model.md`](./docs/security/bootstrap-threat-model.md)
+- Issue・契約・担当範囲の正本: [`docs/architecture/source-of-truth.md`](./docs/architecture/source-of-truth.md)
+
+## 本番導入までに組織側で決めること
+
+このリポジトリを実環境へ適用するには、少なくとも次の実装と運用が必要です。
+
+| 参照実装の境界 | 組織側で追加するもの |
+| --- | --- |
+| local export入力 | source systemの認証、export取得、承認、暗号化転送 |
+| synthetic Profile・Policy | tenant、分類、マスキング、保持、削除、例外ルール |
+| local adapter bundle | コードレビュー、署名・配布、脆弱性検査、実データfixtureの管理 |
+| fake replay executor | LLM/model、tool、workspace、credential、network、停止・監視の実装 |
+| generated review questions | reviewer identity、承認ルート、差戻し、変更履歴、監査証跡 |
+| local SQLite storage | production DB/object store、暗号化、アクセス制御、可用性、backup、retention |
+
+本番可否は、conformanceが通ることだけでは決まりません。対象組織の実データ、権限、例外、法令・契約、運用責任者を含む受入試験を別途定義してください。
+
 ## このプロジェクトが目指すもの
 
 このプロジェクトは、万能なAIエージェントを一体つくるものではない。

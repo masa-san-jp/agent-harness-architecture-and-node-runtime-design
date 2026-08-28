@@ -8,8 +8,15 @@ warning; update it only when a workspace package or dependency changes.
 
 ## The CLI cannot resolve a workspace package
 
-Run the CLI through the package test or run the package build first. The reference CLI's `pretest`
-script builds its workspace dependencies so a clean checkout can use their declared exports.
+Run the CLI through its package script from the repository root:
+
+```sh
+pnpm --filter @agent-harness/reference-cli run cli
+```
+
+The reference CLI's `precli` script builds its workspace dependencies on a clean checkout. If you
+invoke `node apps/reference-cli/src/cli.mjs` directly, build the dependencies first with
+`pnpm --filter @agent-harness/reference-cli run build-dependencies`.
 
 ## A file is not imported
 
@@ -29,6 +36,10 @@ review change set.
 Replay requires a fixed input snapshot reference and no tool/write/network request. Execute requires
 both a passing evaluation and an active approval. These checks are enforced by the control kernel,
 not by the CLI's natural-language output.
+
+The default CLI path is deliberately a `replay` with a fake executor. A completed replay does not
+mean that a real business action was executed; a `HarnessDraft` remains non-executable until an
+organization supplies and separately approves a real runtime integration.
 
 ## The profile is rejected
 

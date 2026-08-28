@@ -2,7 +2,7 @@
   "name": "agent-harness-architecture-and-node-runtime-design",
   "version": "0.1.0",
   "private": true,
-  "description": "Reference architecture and runtime contracts for evidence-to-harness bootstrapping.",
+  "description": "Runnable local reference implementation for bootstrapping a guarded agent harness from evidence, with profile, adapter, graph, review, replay, and storage contracts.",
   "type": "module",
   "packageManager": "pnpm@10.34.5",
   "engines": {
