@@ -14,9 +14,24 @@ Run the CLI through its package script from the repository root:
 pnpm --filter @agent-harness/reference-cli run cli
 ```
 
-The reference CLI's `precli` script builds its workspace dependencies on a clean checkout. If you
-invoke `node apps/reference-cli/src/cli.mjs` directly, build the dependencies first with
+The reference CLI's package script builds its workspace dependencies before bootstrap or validation
+on a clean checkout. Help, version, and scaffold commands do not need a package build. If you invoke
+`node apps/reference-cli/src/cli.mjs` directly, build the dependencies first with
 `pnpm --filter @agent-harness/reference-cli run build-dependencies`.
+
+## Configuration validation fails
+
+Run `--validate` and fix the reported Profile, Policy, adapter bundle, or input binding before
+running bootstrap. The validator intentionally rejects policy configurations that are not
+deny-by-default, Profile references to undeclared adapters, source paths outside the input root,
+and adapter bundle bindings that do not match. It does not contact an external service.
+
+## Scaffold creation fails
+
+`--init <dir>` never overwrites an existing file. Choose a new directory or an existing empty
+directory. If a previous initialization was interrupted and left files behind, inspect the target
+before deciding whether to move those files and retry; do not point `--init` at a directory that
+contains an approved export.
 
 ## A file is not imported
 

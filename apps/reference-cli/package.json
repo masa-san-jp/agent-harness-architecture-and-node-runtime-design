@@ -6,9 +6,8 @@
   "scripts": {
     "build-dependencies": "node scripts/build-dependencies.mjs",
     "pretest": "pnpm run build-dependencies",
-    "precli": "pnpm run build-dependencies",
     "test": "vitest run --passWithNoTests",
-    "cli": "node src/cli.mjs"
+    "cli": "node scripts/run-cli.mjs"
   },
   "dependencies": {
     "@agent-harness/adapter-registry": "workspace:*",

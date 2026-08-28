@@ -1,0 +1,1 @@
+{"event_id":"event:example-custom-001","actor":"person:example","action":"example.custom_recorded","input_ref":"artifact:example-input","output_ref":"artifact:example-output"}

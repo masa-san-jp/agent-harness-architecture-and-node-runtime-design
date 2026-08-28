@@ -1,0 +1,13 @@
+{
+  "bundle_id": "bundle:organization-example",
+  "version": "1.0.0",
+  "adapters": [
+    {
+      "adapter_ref": "organization-example",
+      "version": "1.0.0",
+      "source_kind": "other",
+      "module_path": "example-adapter.mjs",
+      "read_only": true
+    }
+  ]
+}
