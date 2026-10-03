@@ -737,3 +737,8 @@ flowchart LR
 実装に必要なオブジェクト、状態遷移、ハーネス定義、ログスキーマ、レビュー、ロードマップは、次のアーキテクチャ設計書で定義する。
 
 - [`20260824-business-node-driven-agent-harness-architecture-design.md`](./docs/architecture/20260824-business-node-driven-agent-harness-architecture-design.md)
+
+## 設計の成立背景
+
+[アーキテクチャ設計書](docs/architecture/20260824-business-node-driven-agent-harness-architecture-design.md)は、2026-08-24・v0.1.0 の Architecture Baseline として記録されています。出発点は、個別自動化ごとの仕様の分断、現場への再入力負担、対話・観測・実行の権限混在、ログ形式の不統一という問題設定です。そこから、共通の業務ノードと処理単位のハーネスを分け、制御カーネルで権限と状態を管理する構成を定義しています。この日付は設計文書の基準日であり、組織への本番導入日や運用実績を示すものではありません。
+
